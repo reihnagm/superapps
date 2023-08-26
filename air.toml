@@ -1,0 +1,9 @@
+[build]
+exclude_dir = ["assets", "docs", "node_modules"]
+
+[log]
+time = true
+
+[color]
+app = "yellow"
+log = "green"
