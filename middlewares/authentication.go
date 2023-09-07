@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"time"
+	// "time"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -64,16 +64,13 @@ func JwtAuthentication(next http.Handler) http.Handler {
 	})
 }
 
-func CreateToken(userId string, fullname string, username string, publicId string) (map[string]string, error) {
+func CreateToken(userId string) (map[string]string, error) {
 
 	token := jwt.New(jwt.SigningMethodHS256)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["authorized"] = true
-	claims["uid"] = userId
-	claims["fullname"] = fullname
-	claims["username"] = username
-	claims["publicId"] = publicId
-	claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
+	claims["id"] = userId
+	// claims["exp"] = time.Now().Add(time.Hour * 168).Unix()
 
 	access, err := token.SignedString([]byte(os.Getenv("JWT_SECRET")))
 
@@ -82,21 +79,5 @@ func CreateToken(userId string, fullname string, username string, publicId strin
 		return nil, err
 	}
 
-	refToken := jwt.New(jwt.SigningMethodHS256)
-	refClaims := refToken.Claims.(jwt.MapClaims)
-	refClaims["authorized"] = true
-	refClaims["uid"] = userId
-	refClaims["fullname"] = fullname
-	refClaims["username"] = username
-	refClaims["publicId"] = publicId
-	refClaims["exp"] = time.Now().Add(time.Hour * 192).Unix()
-
-	refresh, err := refToken.SignedString([]byte(os.Getenv("JWT_SECRET")))
-
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, err
-	}
-
-	return map[string]string{"access_token": access, "refresh_token": refresh}, nil
+	return map[string]string{"token": access}, nil
 }

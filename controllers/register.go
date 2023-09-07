@@ -49,6 +49,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
+	result, err := data.Register()
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
 	helper.Logger("info", "Register Success")
-	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

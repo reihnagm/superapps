@@ -34,8 +34,13 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
-	// password := data.Password
+	result, err := data.Login()
 
-	helper.Logger("info", "Login Success")
-	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	// helper.Logger("info", "Login Success")
+	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
