@@ -56,6 +56,6 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Register Success")
+	helper.Logger("info", "Register success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

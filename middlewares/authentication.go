@@ -15,7 +15,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 
 		tokenHeader := r.Header.Get("Authorization")
 
-		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" {
+		if r.URL.Path != "/api/v1/login" || r.URL.Path != "/api/v1/register" || r.URL.Path != "/api/v1/verify-top" {
 			next.ServeHTTP(w, r)
 			return
 		}

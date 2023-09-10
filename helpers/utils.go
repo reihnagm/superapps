@@ -5,9 +5,36 @@ package helper
 // )
 
 import (
+	"math/rand"
     "regexp"
+    "time"
     "golang.org/x/crypto/bcrypt"
 )
+
+var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
+func Contains(s []string, e string) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
+
+func CodeOtp() string {
+
+	rand.Seed(time.Now().UTC().UnixNano())
+	
+	b := make([]rune, 4)
+	l := len(letterRunes)
+	for i := range b {
+		b[i] = letterRunes[rand.Intn(l)]
+	}
+
+	return string(b)
+}
+
 
 func IsValidEmail(email string) bool {
     // Optional 1
