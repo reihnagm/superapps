@@ -2,11 +2,20 @@ package controllers
 
 import (
 	"net/http"
+	"superapps/models"
 	helper "superapps/helpers"
 )
 
-func NewsAll(w http.ResponseWriter, r *http.Request) {
+func All(w http.ResponseWriter, r *http.Request) {
 
-	// resp := helper.MessageSuccess(http.StatusOK, false, "Successfully")
-	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+	data := &models.News{}
+
+	result, err := data.GetNews()
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Response(w, http.StatusOK, false, "Successfully", result["news"])
 }

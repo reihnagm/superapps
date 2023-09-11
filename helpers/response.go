@@ -16,7 +16,7 @@ func MessageError(status int, err bool, message string) map[string]interface{} {
 	return map[string]interface{}{"status": status, "error": err, "message": message}
 }
 
-func Response(w http.ResponseWriter, status int, err bool, message string, data map[string]interface{}) {
+func Response(w http.ResponseWriter, status int, err bool, message string, data any) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(&entities.Response{status, err, message, data})

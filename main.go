@@ -29,7 +29,7 @@ func main() {
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
 	// News
-	router.HandleFunc("/api/v1/news", controllers.NewsAll).Methods("GET")
+	router.HandleFunc("/api/v1/news", controllers.All).Methods("GET")
 
 	port := os.Getenv("PORT")
 	handler := router
