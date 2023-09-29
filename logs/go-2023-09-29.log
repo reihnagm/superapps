@@ -1,0 +1,14 @@
+[ERROR]: 2023-09-29 21:49:30 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'e6-a3b4-12fec023af99' at line 1
+[ERROR]: 2023-09-29 21:49:31 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'e6-a3b4-12fec023af99' at line 1
+[ERROR]: 2023-09-29 21:50:06 - In Server: Error 1054: Unknown column 'e96b3aa3' in 'where clause'
+[ERROR]: 2023-09-29 21:50:07 - In Server: Error 1054: Unknown column 'e96b3aa3' in 'where clause'
+[ERROR]: 2023-09-29 22:05:45 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN profiles p ON p.user_id = u.uid' at line 2
+[ERROR]: 2023-09-29 22:05:46 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN profiles p ON p.user_id = u.uid' at line 2
+[ERROR]: 2023-09-29 22:06:12 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN user_profiles p ON p.user_id = u.uid' at line 2
+[ERROR]: 2023-09-29 22:06:13 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN user_profiles p ON p.user_id = u.uid' at line 2
+[ERROR]: 2023-09-29 22:06:13 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN user_profiles p ON p.user_id = u.uid' at line 2
+[ERROR]: 2023-09-29 22:06:44 - In Server: Error 1052: Column 'uid' in where clause is ambiguous
+[ERROR]: 2023-09-29 22:06:45 - In Server: Error 1052: Column 'uid' in where clause is ambiguous
+[ERROR]: 2023-09-29 22:06:45 - In Server: Error 1052: Column 'uid' in where clause is ambiguous
+[ERROR]: 2023-09-29 22:57:25 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''0', '10'' at line 3
+[ERROR]: 2023-09-29 23:37:46 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"SELECT uid FROM news' at line 1
