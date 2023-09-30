@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	// "strconv"
 	"net/http"
 	"superapps/models"
 	helper "superapps/helpers"
@@ -27,6 +26,8 @@ func All(w http.ResponseWriter, r *http.Request) {
 		result["prev_page"], 
 		result["next_page"], 
 		result["current_page"], 
+		result["next_url"],
+		result["prev_url"],
 		result["news"],
 	)
 }

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"os"
 	"strconv"
 	"math"
 	"errors"
@@ -43,6 +44,8 @@ type UserEntity struct {
 
 func (n *News) GetNews(page, limit string) (map[string]interface{}, error) {
 
+	url := os.Getenv("API_URL")
+	
 	var appAssign ApplicationEntity
 
 	var news NewsEntity
@@ -80,12 +83,8 @@ func (n *News) GetNews(page, limit string) (map[string]interface{}, error) {
 	} else {
 		prevPage = pageinteger - 1 
 	}
-
-	if pageinteger == int(perPage) {
-		nextPage = 1
-	} else {
-		nextPage = pageinteger + 1 
-	}
+	
+	nextPage = pageinteger + 1
 
 	newsQuery := `SELECT n.uid, n.title, n.description, n.user_id, app.name AS application_name, app.uid AS application_id 
 	FROM news n INNER JOIN applications app ON app.uid = n.application_id LIMIT 
@@ -132,12 +131,17 @@ func (n *News) GetNews(page, limit string) (map[string]interface{}, error) {
 		data = append(data, newsAssign)
 	}
 
+	var nextUrl = strconv.Itoa(nextPage)
+	var prevUrl = strconv.Itoa(prevPage)
+
 	return map[string]any {
 		"total": resultTotal,
 		"current_page": pageinteger,
 		"per_page": int(perPage),
 		"prev_page": prevPage,
 		"next_page": nextPage,
+		"next_url": url + "?page=" + nextUrl,
+		"prev_url": url + "?page=" + prevUrl,
 		"news": &data,
 	}, nil
 }

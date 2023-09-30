@@ -22,10 +22,10 @@ func Response(w http.ResponseWriter, status int, err bool, message string, data 
 	json.NewEncoder(w).Encode(&entities.Response{status, err, message, data})
 }
 
-func ResponseWithPagination(w http.ResponseWriter, status int, err bool, message string, total any, perPage any, prevPage any, nextPage any, currentPage any, data any) {
+func ResponseWithPagination(w http.ResponseWriter, status int, err bool, message string, total any, perPage any, prevPage any, nextPage any, currentPage any, nextUrl any, prevUrl, data any) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(&entities.ResponseWithPagination{status, err, message, total, perPage, prevPage, nextPage, currentPage, data})
+	json.NewEncoder(w).Encode(&entities.ResponseWithPagination{status, err, message, total, perPage, prevPage, nextPage, currentPage, nextUrl, prevUrl, data})
 }
 
 func FormatError(err string) error {
