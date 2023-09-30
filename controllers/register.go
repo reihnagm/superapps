@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"superapps/models"
+	service "superapps/services"
 	helper "superapps/helpers"
 )
 
@@ -49,7 +50,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
-	result, err := data.Register()
+	result, err := service.Register()
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"superapps/models"
+	service "superapps/services"
 	helper "superapps/helpers"
 )
 
@@ -34,7 +35,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
-	result, err := data.Login()
+	result, err := service.Login()
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
