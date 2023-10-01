@@ -23,6 +23,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	email 	 := data.Email
 	password := data.Password
 	phone 	 := data.Phone
+	AppName  := data.AppName
 
 	if  email == "" {
 		helper.Logger("error", "In Server: email field is required")
@@ -50,7 +51,13 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
-	result, err := service.Register()
+	if AppName == "" {
+		helper.Logger("error", "In Server: app_name field is required")
+		helper.Response(w, 400, true, "app_name field is required", map[string]interface{}{})
+		return 
+	}
+
+	result, err := service.Register(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})

@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type NewsFormEntity struct {
+type NewsForm struct {
 	Uid				string `json:"id"`
 	Title 			string `json:"title"`
 	Description 	string `json:"desc"`
@@ -12,35 +12,46 @@ type NewsFormEntity struct {
 	CreatedAt		time.Time `json:"created_at"`
 	ApplicationId 	string `json:"app_id"`
 	ApplicationName string `json:"app_name"`
-	Application 	ApplicationResponseEntity `json:"app"`
-	User 			UserResponseEntity `json:"user"`
+	Application 	NewsApplicationResponse `json:"app"`
+	User 			NewsUserResponse `json:"user"`
 }
 
-type ApplicationResponseEntity struct {
+type NewsImageForm struct {
+	Path 		string `json:"path"`
+	Size		any    `json:"size"`
+}
+
+type NewsApplicationResponse struct {
 	ApplicationId string `json:"id"`
 	Name 		  string `json:"name"`
 }
 
-type AllCountNewsEntity struct {
+type AllCountNews struct {
 	Uid			  string `json:"id"`
 }
 
-type NewsResponseEntity struct {
+type NewsResponse struct {
 	Uid			string `json:"id"`
 	Title 		string `json:"title"`
 	Description	string `json:"desc"`
-	App 		ApplicationResponseEntity `json:"app"`
-	User 		UserResponseEntity `json:"user"`
+	Images		[]NewsImageResponse `json:"images"`
+	App 		NewsApplicationResponse `json:"app"`
+	User 		NewsUserResponse `json:"user"`
 	CreatedAt   string `json:"created_at"`
 }
 
-type UserEntity struct {
+type NewsImageResponse struct {
+	Path 		string `json:"path"`
+	Size		any    `json:"size"`
+}
+
+type NewsUser struct {
 	Fullname string `json:"fullname"`
 	Email 	 string `json:"email"`
 	Phone 	 string `json:"phone"`
 }
 
-type UserResponseEntity struct {
+type NewsUserResponse struct {
 	Fullname string `json:"fullname"`
 	Email 	 string `json:"email"`
 	Phone 	 string `json:"phone"`

@@ -35,7 +35,7 @@ func VerifyOtp(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
-	result, err := service.VerifyOtp()
+	result, err := service.VerifyOtp(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})

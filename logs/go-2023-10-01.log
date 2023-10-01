@@ -1,0 +1,68 @@
+[ERROR]: 2023-10-01 06:46:43 - In Server: val field is required
+[INFO]: 2023-10-01 06:54:35 - Login success
+[INFO]: 2023-10-01 11:17:44 - Login success
+[INFO]: 2023-10-01 11:17:46 - Login success
+[INFO]: 2023-10-01 11:17:47 - Login success
+[INFO]: 2023-10-01 11:18:00 - Login success
+[INFO]: 2023-10-01 11:18:00 - Login success
+[INFO]: 2023-10-01 11:20:13 - Login success
+[INFO]: 2023-10-01 11:20:13 - Login success
+[INFO]: 2023-10-01 11:20:34 - Login success
+[INFO]: 2023-10-01 11:20:35 - Login success
+[INFO]: 2023-10-01 11:20:36 - Login success
+[INFO]: 2023-10-01 11:20:36 - Login success
+[INFO]: 2023-10-01 11:21:43 - Login success
+[INFO]: 2023-10-01 11:21:47 - Login success
+[INFO]: 2023-10-01 11:22:08 - Login success
+[INFO]: 2023-10-01 11:22:48 - Login success
+[INFO]: 2023-10-01 11:23:20 - Login success
+[INFO]: 2023-10-01 11:23:23 - Login success
+[ERROR]: 2023-10-01 11:50:04 - In Server: Missing auth token
+[ERROR]: 2023-10-01 11:50:05 - In Server: Missing auth token
+[ERROR]: 2023-10-01 11:50:32 - In Server: Missing auth token
+[ERROR]: 2023-10-01 11:50:32 - In Server: Missing auth token
+[INFO]: 2023-10-01 11:50:42 - Login success
+[ERROR]: 2023-10-01 11:51:09 - In Server: Missing auth token
+[INFO]: 2023-10-01 19:55:15 - Create News success
+[INFO]: 2023-10-01 20:03:09 - Create News success
+[ERROR]: 2023-10-01 20:08:01 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`superapps`.`news`, CONSTRAINT `news_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2023-10-01 20:08:01 - Create News success
+[INFO]: 2023-10-01 20:11:08 - Login success
+[INFO]: 2023-10-01 20:11:18 - Create News success
+[ERROR]: 2023-10-01 20:13:25 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`superapps`.`news`, CONSTRAINT `news_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2023-10-01 20:13:25 - Create News success
+[INFO]: 2023-10-01 20:13:46 - Login success
+[INFO]: 2023-10-01 20:13:58 - Create News success
+[ERROR]: 2023-10-01 20:17:14 - In Server: title field is required
+[INFO]: 2023-10-01 20:33:31 - Register success
+[INFO]: 2023-10-01 20:37:14 - Register success
+[ERROR]: 2023-10-01 20:39:23 - In Server: Please activate your account
+[ERROR]: 2023-10-01 20:43:41 - In Server: Otp is expired
+[ERROR]: 2023-10-01 20:44:09 - In Server: Please activate your account
+[INFO]: 2023-10-01 20:44:19 - Verify account success
+[INFO]: 2023-10-01 20:44:22 - Login success
+[ERROR]: 2023-10-01 20:52:03 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`superapps`.`news`, CONSTRAINT `news_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2023-10-01 20:52:03 - Create News success
+[ERROR]: 2023-10-01 20:53:36 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`superapps`.`news`, CONSTRAINT `news_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[ERROR]: 2023-10-01 20:59:33 - In Server: APP_NAME headers is required
+[ERROR]: 2023-10-01 21:02:07 - In Server: APP_NAME headers is required
+[ERROR]: 2023-10-01 21:03:24 - In Server: Error 1452: Cannot add or update a child row: a foreign key constraint fails (`superapps`.`news`, CONSTRAINT `news_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE)
+[INFO]: 2023-10-01 21:03:32 - Login success
+[INFO]: 2023-10-01 21:03:46 - Create News success
+[ERROR]: 2023-10-01 21:05:20 - In Server: Missing auth token
+[INFO]: 2023-10-01 21:05:52 - Upload success
+[ERROR]: 2023-10-01 21:07:33 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:09:14 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:09:45 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:09:46 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:09:46 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:09:47 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:09:47 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:10:15 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:10:16 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:10:16 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:11:37 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:11:43 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:11:55 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:15:27 - In Server: Missing auth token
+[ERROR]: 2023-10-01 21:16:21 - In Server: Missing auth token

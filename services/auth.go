@@ -5,14 +5,13 @@ import (
 	"time"
 	"golang.org/x/crypto/bcrypt"
 	entities "superapps/entities"
+	models "superapps/models"
 	helper "superapps/helpers"
 	middleware "superapps/middlewares"
 	uuid "github.com/satori/go.uuid"
 )
 
-func VerifyOtp() (map[string]interface{}, error) {
-
-	u := entities.User{}
+func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 	user := entities.User{}
 
@@ -73,17 +72,14 @@ func VerifyOtp() (map[string]interface{}, error) {
 	return map[string]interface{}{"token": access}, nil
 }
 
-func Login() (map[string]interface{}, error) {
-
-	u := entities.User{}
+func Login(u *models.User) (map[string]interface{}, error) {
 
 	user := entities.User{}
 
-	user.Id = uuid.NewV4().String()
 	user.Password = u.Password
 
 	users := []entities.UserLogin{}
-	query := `SELECT email_active, password FROM users WHERE email = '`+u.Val+`' OR phone = '`+u.Val+`'`
+	query := `SELECT uid, email_active, password FROM users WHERE email = '`+u.Val+`' OR phone = '`+u.Val+`'`
 
 	err := db.Debug().Raw(query).Scan(&users).Error
 
@@ -99,6 +95,7 @@ func Login() (map[string]interface{}, error) {
 	} 
 	
 	emailActive := users[0].EmailActive
+	user.Id = users[0].Uid
 
 	if emailActive == 0 { 
 		err := db.Debug().Exec(`UPDATE users SET otp = '`+helper.CodeOtp()+`', otp_date = NOW() 
@@ -133,9 +130,7 @@ func Login() (map[string]interface{}, error) {
 	return map[string]interface{}{"token": access}, nil
 }
 
-func Register() (map[string]interface{}, error) {
-
-	u := entities.User{}
+func Register(u *models.User) (map[string]interface{}, error) {
 
 	hashedPassword, err := helper.Hash(u.Password)
 	if err != nil {
@@ -168,9 +163,25 @@ func Register() (map[string]interface{}, error) {
 	if isUserExist == 1 {
 		return nil, errors.New("User already exist")
 	} 
+	
+	applications := []entities.Application{}
+	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+u.AppName+`'`).Scan(&applications).Error
+	
+	if errCheckApp != nil {
+		helper.Logger("error", "In Server: "+errCheckApp.Error())
+		return nil, errors.New(errCheckApp.Error())
+	}
 
-	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp) 
-	VALUES ('`+user.Id+`', '`+user.Email+`', '`+user.Phone+`', '`+user.Password+`', '`+otp+`')`).Error
+	isAppExist := len(applications)
+
+	if isAppExist == 0 {
+		return nil, errors.New("App not found")
+	} 
+
+	ApplicationId := applications[0].Uid
+
+	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp, application_id) 
+	VALUES ('`+user.Id+`', '`+user.Email+`', '`+user.Phone+`', '`+user.Password+`', '`+otp+`', '`+ApplicationId+`')`).Error
 
 	if errInsertUser != nil {
 		helper.Logger("error", "In Server: "+errInsertUser.Error())

@@ -5,25 +5,33 @@ import (
 	"context"
 	"net/http"
 	"os"
+	// "fmt"
 	"strings"
-	// "time"
 	"github.com/dgrijalva/jwt-go"
 )
 
 func JwtAuthentication(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 
-		tokenHeader := r.Header.Get("Authorization")
+		var url string = r.URL.Path
 
-		if r.URL.Path != "/api/v1/login" || r.URL.Path != "/api/v1/register" || r.URL.Path != "/api/v1/verify-top" {
+		var containImage string = "jpg"
+	 
+		if strings.Contains(url, containImage) {
+		   next.ServeHTTP(w, r)
+		   return 
+		} 
+
+		if r.URL.Path == "/api/v1/login" || r.URL.Path == "/api/v1/register" || r.URL.Path == "/api/v1/verify-otp" || r.URL.Path == "/images" {
 			next.ServeHTTP(w, r)
 			return
 		}
 
+		tokenHeader := r.Header.Get("Authorization")
+
 		if tokenHeader == "" {
 			helper.Logger("error", "In Server: Missing auth token")
-			resp := map[string]interface{}{}
-			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", resp)
+			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", map[string]interface{}{})
 			return
 		}
 
@@ -31,8 +39,7 @@ func JwtAuthentication(next http.Handler) http.Handler {
 
 		if len(splitted) != 2 {
 			helper.Logger("error", "In Server: Missing auth token")
-			resp := map[string]interface{}{}
-			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", resp)
+			helper.Response(w, http.StatusUnauthorized, true, "Missing auth token", map[string]interface{}{})
 			return
 		}
 

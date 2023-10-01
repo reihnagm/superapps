@@ -35,7 +35,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	} 
 
-	result, err := service.Login()
+	result, err := service.Login(data)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})

@@ -5,25 +5,30 @@ import (
 	"strconv"
 	"math"
 	"errors"
+	models "superapps/models"
 	entities "superapps/entities"
 	helper "superapps/helpers"
+	uuid "github.com/satori/go.uuid"
 )
 
-func GetNews(search, page, limit string) (map[string]interface{}, error) {
+func GetNews(search, page, limit, appName string) (map[string]interface{}, error) {
 
 	url := os.Getenv("API_URL")
 
-	var appAssign entities.ApplicationResponseEntity
+	var appAssign entities.NewsApplicationResponse
 
-	var news entities.NewsFormEntity
-	var newsAssign entities.NewsResponseEntity
+	var newsImage entities.NewsImageForm
+	var newsImageAssign entities.NewsImageResponse
 
-	var user entities.UserEntity
-	var userAssign entities.UserResponseEntity
+	var news entities.NewsForm
+	var newsAssign entities.NewsResponse
 
-	var data = make([]entities.NewsResponseEntity, 0) 
+	var user entities.NewsUser
+	var userAssign entities.NewsUserResponse
 
-	allNews := []entities.AllCountNewsEntity{}
+	var data = make([]entities.NewsResponse, 0) 
+
+	allNews := []entities.AllCountNews{}
 
 	pageinteger, _  := strconv.Atoi(page) 
 	limitinteger, _ := strconv.Atoi(limit)
@@ -32,10 +37,10 @@ func GetNews(search, page, limit string) (map[string]interface{}, error) {
 
 	allNewsQuery := `SELECT uid FROM news` 
 
-	err := db.Debug().Raw(allNewsQuery).Scan(&allNews).Error
+	errAllNewsQuery := db.Debug().Raw(allNewsQuery).Scan(&allNews).Error
 
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
+	if errAllNewsQuery != nil {
+		helper.Logger("error", "In Server: "+errAllNewsQuery.Error())
 	}
 
 	var resultTotal = len(allNews)
@@ -56,14 +61,14 @@ func GetNews(search, page, limit string) (map[string]interface{}, error) {
 	newsQuery := `SELECT n.uid, n.title, n.description, n.user_id, n.created_at, app.name AS application_name, app.uid AS application_id 
 	FROM news n 
 	INNER JOIN applications app ON app.uid = n.application_id 
-	WHERE n.title LIKE '%`+search+`%'
+	WHERE n.title LIKE '%`+search+`%' AND app.username LIKE '%`+appName+`%'
 	LIMIT `+offset+`, `+limit+``
 
-	rows, err := db.Debug().Raw(newsQuery).Rows()
+	rows, errNewsQuery := db.Debug().Raw(newsQuery).Rows()
 
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
+	if errNewsQuery != nil {
+		helper.Logger("error", "In Server: "+errNewsQuery.Error())
+		return nil, errors.New(errNewsQuery.Error())
 	}
 
 	for rows.Next() {
@@ -73,12 +78,40 @@ func GetNews(search, page, limit string) (map[string]interface{}, error) {
 		INNER JOIN user_profiles p ON p.user_id = u.uid 
 		WHERE u.uid = '`+news.UserId+`'` 
 
-		rows, err := db.Debug().Raw(userQuery).Rows()
+		rows, errUserQuery := db.Debug().Raw(userQuery).Rows()
 
-		if err != nil {
-			helper.Logger("error", "In Server: "+err.Error())
-			return nil, errors.New(err.Error())
+		if errUserQuery != nil {
+			helper.Logger("error", "In Server: "+errUserQuery.Error())
+			return nil, errors.New(errUserQuery.Error())
 		}
+
+		for rows.Next() {
+			db.ScanRows(rows, &user)
+			
+			userAssign.Fullname = user.Fullname
+			userAssign.Email = user.Email
+			userAssign.Phone = user.Phone
+		}
+
+		var dataNewsImage = make([]entities.NewsImageResponse, 0) 
+
+		newsImageQuery := `SELECT path, size FROM news_images WHERE news_id = '`+news.Uid+`'` 
+
+		rows, errNewsImageQuery := db.Debug().Raw(newsImageQuery).Rows()
+
+		if errNewsImageQuery != nil {
+			helper.Logger("error", "In Server: "+errNewsImageQuery.Error())
+			return nil, errors.New(errNewsImageQuery.Error())
+		}
+
+		for rows.Next() {
+			db.ScanRows(rows, &newsImage)
+
+			newsImageAssign.Path = newsImage.Path
+			newsImageAssign.Size = newsImage.Size
+		}
+
+		dataNewsImage = append(dataNewsImage, newsImageAssign)
 
 		for rows.Next() {
 			db.ScanRows(rows, &user)
@@ -96,6 +129,7 @@ func GetNews(search, page, limit string) (map[string]interface{}, error) {
 		newsAssign.Uid = news.Uid
 		newsAssign.Title = news.Title
 		newsAssign.Description = news.Description
+		newsAssign.Images = dataNewsImage
 		newsAssign.App = appAssign
 		newsAssign.User = userAssign
 		newsAssign.CreatedAt = createdAt
@@ -116,4 +150,35 @@ func GetNews(search, page, limit string) (map[string]interface{}, error) {
 		"prev_url": url + "?page=" + prevUrl,
 		"news": &data,
 	}, nil
+}
+
+func CreateNews(n *models.NewsForm) (map[string]interface{}, error) {
+
+	applications := []entities.Application{}
+	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+n.ApplicationName+`'`).Scan(&applications).Error
+	
+	if errCheckApp != nil {
+		helper.Logger("error", "In Server: "+errCheckApp.Error())
+		return nil, errors.New(errCheckApp.Error())
+	}
+
+	isAppExist := len(applications)
+
+	if isAppExist == 0 {
+		return nil, errors.New("App not found")
+	} 
+
+	ApplicationId := applications[0].Uid
+
+	n.Uid = uuid.NewV4().String()
+
+	errInsertNews := db.Debug().Exec(`INSERT INTO news (uid, title, description, application_id, user_id) 
+	VALUES ('`+n.Uid+`', '`+n.Title+`', '`+n.Description+`', '`+ApplicationId+`', '`+n.UserId+`')`).Error
+
+	if errInsertNews != nil {
+		helper.Logger("error", "In Server: "+errInsertNews.Error())
+		return nil, errors.New(errInsertNews.Error())
+	}	
+
+	return map[string]interface{}{}, nil
 }

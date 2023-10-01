@@ -4,9 +4,11 @@ import (
 	"superapps/entities"
 )
 
-type ApplicationResponseEntity entities.ApplicationResponseEntity
-type AllCountNewsEntity entities.AllCountNewsEntity
-type NewsFormEntity entities.NewsFormEntity
-type NewsResponseEntity entities.NewsResponseEntity
-type UserEntity entities.UserEntity
-type UserResponseEntity entities.UserResponseEntity
+type NewsApplicationResponse entities.NewsApplicationResponse
+type AllCountNews entities.AllCountNews
+type NewsForm entities.NewsForm
+type NewsImageForm entities.NewsImageForm
+type NewsResponse entities.NewsResponse
+type NewsImageResponse entities.NewsImageResponse
+type NewsUser entities.NewsUser
+type NewsUserResponse entities.NewsUserResponse

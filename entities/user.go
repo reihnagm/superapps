@@ -9,6 +9,7 @@ type User struct {
 	Val  	 string `json:"val"`
 	Email    string `json:"email"`
 	Phone	 string `json:"phone"`
+	AppName  string `json:"app_name"`
 	Otp	     string `json:"otp"`
 	Password string `json:"password"`
 }
@@ -18,6 +19,7 @@ type CheckAccount struct {
 }
 
 type UserLogin struct {
+	Uid			string `json:"uid"`
 	EmailActive int `json:"email_active"`
 	Password 	string `json:"password"`
 }

@@ -20,15 +20,3 @@ type ResponseWithPagination struct {
     PrevUrl      any `json:"prev_url"`
     Data         any `json:"data"`
 }
-
-// var page = parseInt(req.query.page) || 1
-// var limit = parseInt(req.query.limit) || 10
-
-// badges: badgesNotRead.length,
-// total: resultTotal,
-// per_page: perPage,
-// next_page: nextPage,
-// prev_page: prevPage,
-// current_page: page,
-// next_url: `${process.env.BASE_URL}${req.originalUrl.replace("page=" + page, "page=" + nextPage)}`,
-// prev_url: `${process.env.BASE_URL}${req.originalUrl.replace("page=" + page, "page=" + prevPage)}`
