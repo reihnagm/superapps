@@ -72,6 +72,52 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	return map[string]interface{}{"token": access}, nil
 }
 
+func ResendOtp(u *models.User) (map[string]interface{}, error) {
+
+	users := []entities.UserOtp{}
+	query := `SELECT email_active, otp_date FROM users 
+	WHERE (email = '`+u.Email+`' OR phone = '`+u.Email+`')`
+
+	err := db.Debug().Raw(query).Scan(&users).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 0 {
+		return nil, errors.New("User not found")
+	} 
+
+	emailActive := users[0].EmailActive
+	otpDate := users[0].OtpDate
+
+	if emailActive == 1 {
+		helper.Logger("error", "In Server: Account is already active")
+		return nil, errors.New("Account is already active")
+	}
+
+	currentTime := time.Now()
+    elapsed := currentTime.Sub(otpDate)
+
+	otp := helper.CodeOtp()
+
+	if elapsed >= 1*time.Minute {
+		errUpdateResendOtp:= db.Debug().Exec(`UPDATE users SET otp = '`+otp+`', otp_date = NOW() WHERE email = '`+u.Email+`'`).Error
+
+		if errUpdateResendOtp != nil {
+			helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
+			return nil, errors.New(errUpdateResendOtp.Error())
+		}
+    } 
+
+	return map[string]interface{}{
+		"otp": otp,
+	}, nil
+}
+
 func Login(u *models.User) (map[string]interface{}, error) {
 
 	user := entities.User{}

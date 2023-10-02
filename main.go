@@ -37,6 +37,7 @@ func main() {
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
 
 	// Otp
+	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
 	// News
