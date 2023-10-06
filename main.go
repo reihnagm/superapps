@@ -42,6 +42,7 @@ func main() {
 
 	// News
 	router.HandleFunc("/api/v1/news", controllers.All).Methods("GET")
+	router.HandleFunc("/api/v1/news-upload-image", controllers.CreateImageNews).Methods("POST")
 	router.HandleFunc("/api/v1/news", controllers.CreateNews).Methods("POST")
 
 	// Media 

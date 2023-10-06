@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"math"
 	"errors"
+	"fmt"
 	models "superapps/models"
 	entities "superapps/entities"
 	helper "superapps/helpers"
@@ -150,6 +151,16 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 		"prev_url": url + "?page=" + prevUrl,
 		"news": &data,
 	}, nil
+}
+
+func CreateImageNews(n *models.NewsImageForm) (map[string]interface{}, error) {
+	Uid  := n.NewsId 
+	Path := n.Path
+
+	fmt.Println(Uid)
+	fmt.Println(Path)
+
+	return map[string]interface{}{}, nil
 }
 
 func CreateNews(n *models.NewsForm) (map[string]interface{}, error) {

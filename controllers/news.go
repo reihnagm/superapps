@@ -37,11 +37,38 @@ func All(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
+func CreateImageNews(w http.ResponseWriter ,r*http.Request) {
+
+	data := &models.NewsImageForm{}
+
+	errCreateNews := json.NewDecoder(r.Body).Decode(data)
+
+	if errCreateNews != nil {
+		helper.Logger("error", "In Server: " + errCreateNews.Error())
+		return
+	}
+
+	result, err := service.CreateImageNews(data)
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Logger("info", "Create Image News success")
+	helper.Response(w, http.StatusOK, false, "Successfully", result)
+}
+
 func CreateNews(w http.ResponseWriter, r *http.Request) {
 
 	data := &models.NewsForm{}
 
-	err := json.NewDecoder(r.Body).Decode(data)
+	errCreateNews := json.NewDecoder(r.Body).Decode(data)
+
+	if errCreateNews != nil {
+		helper.Logger("error", "In Server: " + errCreateNews.Error())
+		return
+	}
 
 	tokenHeader := r.Header.Get("Authorization")
 

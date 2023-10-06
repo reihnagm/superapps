@@ -17,6 +17,7 @@ type NewsForm struct {
 }
 
 type NewsImageForm struct {
+	NewsId		string `json:"news_id"`
 	Path 		string `json:"path"`
 	Size		any    `json:"size"`
 }
