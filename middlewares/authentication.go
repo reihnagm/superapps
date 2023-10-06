@@ -1,13 +1,12 @@
 package middlewares
 
 import (
-	helper "superapps/helpers"
 	"context"
 	"net/http"
 	"os"
-	// "fmt"
 	"strings"
 	"github.com/dgrijalva/jwt-go"
+	helper "superapps/helpers"
 )
 
 func JwtAuthentication(next http.Handler) http.Handler {
@@ -52,16 +51,14 @@ func JwtAuthentication(next http.Handler) http.Handler {
 		})
 
 		if err != nil {
-			helper.Logger("error", "In Server: "+err.Error())
-			resp := map[string]interface{}{}
-			helper.Response(w, http.StatusUnauthorized, true, "Token expired", resp)
+			helper.Logger("error", "In Server: "+ err.Error())
+			helper.Response(w, http.StatusUnauthorized, true, err.Error(), map[string]interface{}{})
 			return
 		}
 
 		if !token.Valid {
-			helper.Logger("error", "In Server: Token Expired")
-			resp := map[string]interface{}{}
-			helper.Response(w, http.StatusUnauthorized, true, "Token expired", resp)
+			helper.Logger("error", "In Server: Token is invalid")
+			helper.Response(w, http.StatusUnauthorized, true, "Token is invalid", map[string]interface{}{})
 			return
 		}
 

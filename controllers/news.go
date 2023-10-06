@@ -3,8 +3,6 @@ package controllers
 import (
 	"net/http"
 	"encoding/json"
-	"os"
-	"strings"
 	"github.com/dgrijalva/jwt-go"
 	models "superapps/models"
 	service "superapps/services"
@@ -72,71 +70,51 @@ func CreateNews(w http.ResponseWriter, r *http.Request) {
 
 	tokenHeader := r.Header.Get("Authorization")
 
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+		
+	UserId, _ := claims["id"].(string)
+
 	appName := r.Header.Get("APP_NAME")
+	id	  	:= data.Uid
+	title 	:= data.Title
+	desc  	:= data.Description
 
-	splitted := strings.Split(tokenHeader, " ")
+	data.ApplicationName = appName
+	data.UserId = UserId
 
-	tokenPart := splitted[1]
-
-	token, err := jwt.Parse(tokenPart, func(token *jwt.Token) (interface{}, error) {
-		return []byte(os.Getenv("JWT_SECRET")), nil
-	})
-
-	if err != nil {
-		helper.Logger("error", "In Server: " + err.Error())
+	if appName == "" {
+		helper.Logger("error", "In Server: APP_NAME headers is required")
+		helper.Response(w, 400, true, "APP_NAME headers is required", map[string]interface{}{})
 		return
 	}
 
-	if err != nil {
-		helper.Logger("error", "In Server: " + err.Error())
-		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
+	if id == "" {
+		helper.Logger("error", "In Server: id is required")
+		helper.Response(w, 400, true, "id is required", map[string]interface{}{})
 		return
 	}
 
-	if token.Valid {
-		claims, ok := token.Claims.(jwt.MapClaims)
-		
-		if ok {
-			UserId, _ := claims["id"].(string)
-			
-			data.ApplicationName = appName
-			data.UserId = UserId
+	if  title == "" {
+		helper.Logger("error", "In Server: title field is required")
+		helper.Response(w, 400, true, "title field is required", map[string]interface{}{})
+		return
+	} 
 
-			title := data.Title
-			desc  := data.Description
+	if  desc == "" {
+		helper.Logger("error", "In Server: description field is required")
+		helper.Response(w, 400, true, "description field is required", map[string]interface{}{})
+		return
+	} 
 
-			if appName == "" {
-				helper.Logger("error", "In Server: APP_NAME headers is required")
-				helper.Response(w, 400, true, "APP_NAME headers is required", map[string]interface{}{})
-				return
-			}
+	result, err := service.CreateNews(data)
 
-			if  title == "" {
-				helper.Logger("error", "In Server: title field is required")
-				helper.Response(w, 400, true, "title field is required", map[string]interface{}{})
-				return
-			} 
-		
-			if  desc == "" {
-				helper.Logger("error", "In Server: description field is required")
-				helper.Response(w, 400, true, "description field is required", map[string]interface{}{})
-				return
-			} 
-
-			result, err := service.CreateNews(data)
-
-			if err != nil {
-				helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
-				return
-			}
-
-			helper.Logger("info", "Create News success")
-			helper.Response(w, http.StatusOK, false, "Successfully", result)
-		} else {
-			helper.Logger("error", "In Server: Invalid token claims.")
-			helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
-		}
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
 	}
 
-
+	helper.Logger("info", "Create News success")
+	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }

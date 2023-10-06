@@ -19,7 +19,7 @@ type NewsForm struct {
 type NewsImageForm struct {
 	NewsId		string `json:"news_id"`
 	Path 		string `json:"path"`
-	Size		any    `json:"size"`
+	Size		int    `json:"size"`
 }
 
 type NewsApplicationResponse struct {
@@ -43,7 +43,7 @@ type NewsResponse struct {
 
 type NewsImageResponse struct {
 	Path 		string `json:"path"`
-	Size		any    `json:"size"`
+	Size		int    `json:"size"`
 }
 
 type NewsUser struct {

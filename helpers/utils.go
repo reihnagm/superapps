@@ -7,7 +7,10 @@ package helper
 import (
 	"math/rand"
     "regexp"
+	"strings"
+	"os"
     "time"
+	"github.com/dgrijalva/jwt-go"
     "golang.org/x/crypto/bcrypt"
 )
 
@@ -20,6 +23,17 @@ func Contains(s []string, e string) bool {
 		}
 	}
 	return false
+}
+
+func DecodeJwt(tokenP string) *jwt.Token {
+	splitted := strings.Split(tokenP, " ")
+
+	tokenPart := splitted[1]
+
+	token, _ := jwt.Parse(tokenPart, func(token *jwt.Token) (interface{}, error) {
+		return []byte(os.Getenv("JWT_SECRET")), nil
+	})
+	return token
 }
 
 func CodeOtp() string {

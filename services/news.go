@@ -9,7 +9,7 @@ import (
 	models "superapps/models"
 	entities "superapps/entities"
 	helper "superapps/helpers"
-	uuid "github.com/satori/go.uuid"
+	// uuid "github.com/satori/go.uuid"
 )
 
 func GetNews(search, page, limit, appName string) (map[string]interface{}, error) {
@@ -114,6 +114,8 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 
 		dataNewsImage = append(dataNewsImage, newsImageAssign)
 
+		fmt.Println()
+
 		for rows.Next() {
 			db.ScanRows(rows, &user)
 			
@@ -130,7 +132,22 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 		newsAssign.Uid = news.Uid
 		newsAssign.Title = news.Title
 		newsAssign.Description = news.Description
-		newsAssign.Images = dataNewsImage
+
+		for i, _ := range dataNewsImage {
+			if dataNewsImage[i].Path == "" {
+				// newsImageAssign.Path = "-"
+				// newsImageAssign.Size = 0
+	
+				// var tempNewsImage = make([]entities.NewsImageResponse, 0) 
+				// tempNewsImage = append(tempNewsImage, newsImageAssign)
+	
+				newsAssign.Images = []entities.NewsImageResponse{}
+			} else {
+				newsAssign.Images = dataNewsImage
+			}
+		}
+
+		
 		newsAssign.App = appAssign
 		newsAssign.User = userAssign
 		newsAssign.CreatedAt = createdAt
@@ -181,7 +198,7 @@ func CreateNews(n *models.NewsForm) (map[string]interface{}, error) {
 
 	ApplicationId := applications[0].Uid
 
-	n.Uid = uuid.NewV4().String()
+	// n.Uid = uuid.NewV4().String()
 
 	errInsertNews := db.Debug().Exec(`INSERT INTO news (uid, title, description, application_id, user_id) 
 	VALUES ('`+n.Uid+`', '`+n.Title+`', '`+n.Description+`', '`+ApplicationId+`', '`+n.UserId+`')`).Error
