@@ -31,7 +31,7 @@ func All(w http.ResponseWriter, r *http.Request) {
 		result["current_page"], 
 		result["next_url"],
 		result["prev_url"],
-		result["news"],
+		result["data"],
 	)
 }
 
@@ -59,7 +59,7 @@ func CreateImageNews(w http.ResponseWriter ,r*http.Request) {
 
 func CreateNews(w http.ResponseWriter, r *http.Request) {
 
-	data := &models.NewsForm{}
+	data := &models.News{}
 
 	errCreateNews := json.NewDecoder(r.Body).Decode(data)
 

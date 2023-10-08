@@ -21,30 +21,28 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 	var newsImage entities.NewsImageForm
 	var newsImageAssign entities.NewsImageResponse
 
-	var news entities.NewsForm
-	var newsAssign entities.NewsResponse
+	var news entities.News
 
 	var user entities.NewsUser
 	var userAssign entities.NewsUserResponse
 
-	var data = make([]entities.NewsResponse, 0) 
+	var newsAssign entities.NewsResponse
+	var appendNewsAssign = make([]entities.NewsResponse, 0) 
 
-	allNews := []entities.AllCountNews{}
+	var allCountNews []models.AllCountNews
 
 	pageinteger, _  := strconv.Atoi(page) 
 	limitinteger, _ := strconv.Atoi(limit)
 
 	var offset = strconv.Itoa((pageinteger - 1) * limitinteger)
 
-	allNewsQuery := `SELECT uid FROM news` 
-
-	errAllNewsQuery := db.Debug().Raw(allNewsQuery).Scan(&allNews).Error
+	errAllNewsQuery := db.Debug().Raw(`SELECT uid FROM news`).Scan(&allCountNews).Error
 
 	if errAllNewsQuery != nil {
 		helper.Logger("error", "In Server: "+errAllNewsQuery.Error())
 	}
 
-	var resultTotal = len(allNews)
+	var resultTotal = len(allCountNews)
 
 	var perPage = math.Ceil(float64(resultTotal) / float64(limitinteger))
 
@@ -59,13 +57,11 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 	
 	nextPage = pageinteger + 1
 
-	newsQuery := `SELECT n.uid, n.title, n.description, n.user_id, n.created_at, app.name AS application_name, app.uid AS application_id 
+	rows, errNewsQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.description, n.user_id, n.created_at, app.name AS application_name, app.uid AS application_id 
 	FROM news n 
 	INNER JOIN applications app ON app.uid = n.application_id 
 	WHERE n.title LIKE '%`+search+`%' AND app.username LIKE '%`+appName+`%'
-	LIMIT `+offset+`, `+limit+``
-
-	rows, errNewsQuery := db.Debug().Raw(newsQuery).Rows()
+	LIMIT `+offset+`, `+limit+``).Rows()
 
 	if errNewsQuery != nil {
 		helper.Logger("error", "In Server: "+errNewsQuery.Error())
@@ -75,11 +71,9 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 	for rows.Next() {
 		db.ScanRows(rows, &news)
 
-		userQuery := `SELECT email, phone, fullname FROM users u 
+		rows, errUserQuery := db.Debug().Raw(`SELECT email, phone, fullname FROM users u 
 		INNER JOIN user_profiles p ON p.user_id = u.uid 
-		WHERE u.uid = '`+news.UserId+`'` 
-
-		rows, errUserQuery := db.Debug().Raw(userQuery).Rows()
+		WHERE u.uid = '`+news.UserId+`'`).Rows()
 
 		if errUserQuery != nil {
 			helper.Logger("error", "In Server: "+errUserQuery.Error())
@@ -96,9 +90,7 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 
 		var dataNewsImage = make([]entities.NewsImageResponse, 0) 
 
-		newsImageQuery := `SELECT path, size FROM news_images WHERE news_id = '`+news.Uid+`'` 
-
-		rows, errNewsImageQuery := db.Debug().Raw(newsImageQuery).Rows()
+		rows, errNewsImageQuery := db.Debug().Raw(`SELECT path, size FROM news_images WHERE news_id = '`+news.Uid+`'` ).Rows()
 
 		if errNewsImageQuery != nil {
 			helper.Logger("error", "In Server: "+errNewsImageQuery.Error())
@@ -107,14 +99,14 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 
 		for rows.Next() {
 			db.ScanRows(rows, &newsImage)
+			
+			if newsImage.Path != "" {
+				newsImageAssign.Path = newsImage.Path
+				newsImageAssign.Size = newsImage.Size
 
-			newsImageAssign.Path = newsImage.Path
-			newsImageAssign.Size = newsImage.Size
+				dataNewsImage = append(dataNewsImage, newsImageAssign)
+			}
 		}
-
-		dataNewsImage = append(dataNewsImage, newsImageAssign)
-
-		fmt.Println()
 
 		for rows.Next() {
 			db.ScanRows(rows, &user)
@@ -133,26 +125,13 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 		newsAssign.Title = news.Title
 		newsAssign.Description = news.Description
 
-		for i, _ := range dataNewsImage {
-			if dataNewsImage[i].Path == "" {
-				// newsImageAssign.Path = "-"
-				// newsImageAssign.Size = 0
-	
-				// var tempNewsImage = make([]entities.NewsImageResponse, 0) 
-				// tempNewsImage = append(tempNewsImage, newsImageAssign)
-	
-				newsAssign.Images = []entities.NewsImageResponse{}
-			} else {
-				newsAssign.Images = dataNewsImage
-			}
-		}
+		newsAssign.Images = dataNewsImage
 
-		
 		newsAssign.App = appAssign
 		newsAssign.User = userAssign
 		newsAssign.CreatedAt = createdAt
 
-		data = append(data, newsAssign)
+		appendNewsAssign = append(appendNewsAssign, newsAssign)
 	}
 
 	var nextUrl = strconv.Itoa(nextPage)
@@ -166,7 +145,7 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 		"next_page": nextPage,
 		"next_url": url + "?page=" + nextUrl,
 		"prev_url": url + "?page=" + prevUrl,
-		"news": &data,
+		"data": &appendNewsAssign,
 	}, nil
 }
 
@@ -180,7 +159,7 @@ func CreateImageNews(n *models.NewsImageForm) (map[string]interface{}, error) {
 	return map[string]interface{}{}, nil
 }
 
-func CreateNews(n *models.NewsForm) (map[string]interface{}, error) {
+func CreateNews(n *models.News) (map[string]interface{}, error) {
 
 	applications := []entities.Application{}
 	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+n.ApplicationName+`'`).Scan(&applications).Error

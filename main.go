@@ -45,6 +45,9 @@ func main() {
 	router.HandleFunc("/api/v1/news-upload-image", controllers.CreateImageNews).Methods("POST")
 	router.HandleFunc("/api/v1/news", controllers.CreateNews).Methods("POST")
 
+	// Membernear
+	router.HandleFunc("/api/v1/membernear/all", controllers.GetMembernear).Methods("GET")
+
 	// Media 
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")
 

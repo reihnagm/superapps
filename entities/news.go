@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-type NewsForm struct {
+type News struct {
 	Uid				string `json:"id"`
 	Title 			string `json:"title"`
 	Description 	string `json:"desc"`

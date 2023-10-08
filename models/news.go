@@ -6,7 +6,7 @@ import (
 
 type NewsApplicationResponse entities.NewsApplicationResponse
 type AllCountNews entities.AllCountNews
-type NewsForm entities.NewsForm
+type News entities.News
 type NewsImageForm entities.NewsImageForm
 type NewsResponse entities.NewsResponse
 type NewsImageResponse entities.NewsImageResponse
