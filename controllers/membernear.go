@@ -8,8 +8,16 @@ import (
 
 func GetMembernear(w http.ResponseWriter, r *http.Request) {
 
+	appName := r.Header.Get("APP_NAME")
+
 	originLat  := r.URL.Query().Get("lat")
 	originLng  := r.URL.Query().Get("lng")
+
+	if appName == "" {
+		helper.Logger("error", "In Server: APP_NAME headers is required")
+		helper.Response(w, 400, true, "APP_NAME headers is required", map[string]interface{}{})
+		return
+	}
 
 	if originLat == "" {
 		helper.Logger("error", "In Server: lat is required")
@@ -23,7 +31,7 @@ func GetMembernear(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result, err := service.GetMembernear(originLat, originLng)
+	result, err := service.GetMembernear(originLat, originLng, appName)
 
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})

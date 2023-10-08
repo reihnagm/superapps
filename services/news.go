@@ -57,9 +57,9 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 	
 	nextPage = pageinteger + 1
 
-	rows, errNewsQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.description, n.user_id, n.created_at, app.name AS application_name, app.uid AS application_id 
+	rows, errNewsQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.description, n.user_id, n.created_at, app.name AS application_name, app.uid AS app_id 
 	FROM news n 
-	INNER JOIN applications app ON app.uid = n.application_id 
+	INNER JOIN applications app ON app.uid = n.app_id 
 	WHERE n.title LIKE '%`+search+`%' AND app.username LIKE '%`+appName+`%'
 	LIMIT `+offset+`, `+limit+``).Rows()
 
@@ -179,7 +179,7 @@ func CreateNews(n *models.News) (map[string]interface{}, error) {
 
 	// n.Uid = uuid.NewV4().String()
 
-	errInsertNews := db.Debug().Exec(`INSERT INTO news (uid, title, description, application_id, user_id) 
+	errInsertNews := db.Debug().Exec(`INSERT INTO news (uid, title, description, app_id, user_id) 
 	VALUES ('`+n.Uid+`', '`+n.Title+`', '`+n.Description+`', '`+ApplicationId+`', '`+n.UserId+`')`).Error
 
 	if errInsertNews != nil {

@@ -7,22 +7,40 @@ import (
 	"net/http"
 	"strings"
 	"strconv"
+	"errors"
 	"math"
 	models "superapps/models"
 	helper "superapps/helpers"
 )
 
-func GetMembernear(originLat, originLng string) (map[string]interface{}, error) {
+func GetMembernear(originLat, originLng, appName string) (map[string]interface{}, error) {
 
 	var allMembernear []models.Membernear
 
 	var membernearAssign models.MembernearAssign
 	var appendMembernearAssign = make([]models.MembernearAssign, 0) 
 
-	errAllMembernearQuery := db.Debug().Raw( `SELECT lat, lng FROM fcms`).Scan(&allMembernear).Error
+	var applications []models.Application
+	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+appName+`'`).Scan(&applications).Error
+	
+	if errCheckApp != nil {
+		helper.Logger("error", "In Server: "+errCheckApp.Error())
+		return nil, errors.New(errCheckApp.Error())
+	}
+
+	isAppExist := len(applications)
+
+	if isAppExist == 0 {
+		return nil, errors.New("App not found")
+	} 
+
+	ApplicationId := applications[0].Uid
+
+	errAllMembernearQuery := db.Debug().Raw(`SELECT lat, lng FROM fcms WHERE app_id = '`+ApplicationId+`' `).Scan(&allMembernear).Error
 
 	if errAllMembernearQuery != nil {
 		helper.Logger("error", "In Server: "+errAllMembernearQuery.Error())
+		return nil, errors.New(errAllMembernearQuery.Error())
 	}
 
 	for i, _ := range allMembernear {

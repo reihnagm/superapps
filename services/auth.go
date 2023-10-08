@@ -226,7 +226,7 @@ func Register(u *models.User) (map[string]interface{}, error) {
 
 	ApplicationId := applications[0].Uid
 
-	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp, application_id) 
+	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp, app_id) 
 	VALUES ('`+user.Id+`', '`+user.Email+`', '`+user.Phone+`', '`+user.Password+`', '`+otp+`', '`+ApplicationId+`')`).Error
 
 	if errInsertUser != nil {

@@ -2,3 +2,10 @@
 [ERROR]: 2023-10-08 10:45:08 - In Server: lat is required
 [ERROR]: 2023-10-08 10:45:15 - In Server: lat is required
 [ERROR]: 2023-10-08 10:45:15 - In Server: lat is required
+[ERROR]: 2023-10-08 17:44:57 - In Server: APP_NAME headers is required
+[ERROR]: 2023-10-08 17:47:58 - In Server: Error 1054: Unknown column 'app_name' in 'where clause'
+[ERROR]: 2023-10-08 17:52:46 - In Server: Error 1054: Unknown column 'app_name' in 'where clause'
+[ERROR]: 2023-10-08 17:52:46 - In Server: Error 1054: Unknown column 'app_name' in 'where clause'
+[ERROR]: 2023-10-08 17:52:58 - In Server: Error 1054: Unknown column 'app_name' in 'where clause'
+[ERROR]: 2023-10-08 17:53:00 - In Server: Error 1054: Unknown column 'app_name' in 'where clause'
+[ERROR]: 2023-10-08 17:53:06 - In Server: Error 1054: Unknown column 'app_name' in 'where clause'
