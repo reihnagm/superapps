@@ -1,0 +1,7 @@
+[INFO]: 2023-12-11 07:42:57 - Login success
+[INFO]: 2023-12-11 07:45:16 - Register success
+[ERROR]: 2023-12-11 07:46:26 - In Server: Account is already active
+[ERROR]: 2023-12-11 07:47:10 - In Server: Otp is expired
+[ERROR]: 2023-12-11 07:47:19 - In Server: Account is already active
+[INFO]: 2023-12-11 07:47:22 - Resend otp success
+[INFO]: 2023-12-11 07:47:28 - Verify account success
