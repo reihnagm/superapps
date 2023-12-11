@@ -57,7 +57,8 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 	
 	nextPage = pageinteger + 1
 
-	rows, errNewsQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.description, n.user_id, n.created_at, app.name AS application_name, app.uid AS app_id 
+	rows, errNewsQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.description, n.user_id, n.created_at, 
+	app.name AS app_name, app.uid AS app_id 
 	FROM news n 
 	INNER JOIN applications app ON app.uid = n.app_id 
 	WHERE n.title LIKE '%`+search+`%' AND app.username LIKE '%`+appName+`%'
@@ -118,8 +119,8 @@ func GetNews(search, page, limit, appName string) (map[string]interface{}, error
 		
 		var createdAt = news.CreatedAt.Format("2006-01-02 15:04")
 
-		appAssign.ApplicationId = news.ApplicationId
-		appAssign.Name = news.ApplicationName
+		appAssign.ApplicationId = news.AppId
+		appAssign.ApplicationName = news.AppName
 
 		newsAssign.Uid = news.Uid
 		newsAssign.Title = news.Title
@@ -162,7 +163,7 @@ func CreateImageNews(n *models.NewsImageForm) (map[string]interface{}, error) {
 func CreateNews(n *models.News) (map[string]interface{}, error) {
 
 	applications := []entities.Application{}
-	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+n.ApplicationName+`'`).Scan(&applications).Error
+	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+n.AppName+`'`).Scan(&applications).Error
 	
 	if errCheckApp != nil {
 		helper.Logger("error", "In Server: "+errCheckApp.Error())

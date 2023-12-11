@@ -81,7 +81,7 @@ func CreateNews(w http.ResponseWriter, r *http.Request) {
 	title 	:= data.Title
 	desc  	:= data.Description
 
-	data.ApplicationName = appName
+	data.AppName = appName
 	data.UserId = UserId
 
 	if appName == "" {

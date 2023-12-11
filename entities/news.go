@@ -10,21 +10,21 @@ type News struct {
 	Description 	string `json:"desc"`
 	UserId 			string `json:"user_id"`
 	CreatedAt		time.Time `json:"created_at"`
-	ApplicationId 	string `json:"app_id"`
-	ApplicationName string `json:"app_name"`
+	AppId 			string `json:"app_id"`
+	AppName 		string `json:"app_name"`
 	Application 	NewsApplicationResponse `json:"app"`
 	User 			NewsUserResponse `json:"user"`
+}
+
+type NewsApplicationResponse struct {
+	ApplicationId 	string `json:"id"`
+	ApplicationName string `json:"name"`
 }
 
 type NewsImageForm struct {
 	NewsId		string `json:"news_id"`
 	Path 		string `json:"path"`
 	Size		int    `json:"size"`
-}
-
-type NewsApplicationResponse struct {
-	ApplicationId string `json:"id"`
-	Name 		  string `json:"name"`
 }
 
 type AllCountNews struct {

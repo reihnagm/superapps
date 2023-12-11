@@ -1,0 +1,13 @@
+[INFO]: 2023-12-10 21:44:48 - Upload success
+[ERROR]: 2023-12-10 22:27:35 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc, n.user_id, n.created_at, 
+	app.name AS app_name, app.uid AS app_id 
+	FROM ' at line 1
+[ERROR]: 2023-12-10 22:27:35 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc, n.user_id, n.created_at, 
+	app.name AS app_name, app.uid AS app_id 
+	FROM ' at line 1
+[ERROR]: 2023-12-10 22:27:36 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'desc, n.user_id, n.created_at, 
+	app.name AS app_name, app.uid AS app_id 
+	FROM ' at line 1
+[ERROR]: 2023-12-10 22:27:52 - In Server: Error 1054: Unknown column 'n.desc' in 'field list'
+[ERROR]: 2023-12-10 22:27:52 - In Server: Error 1054: Unknown column 'n.desc' in 'field list'
+[ERROR]: 2023-12-10 22:27:53 - In Server: Error 1054: Unknown column 'n.desc' in 'field list'
