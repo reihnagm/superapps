@@ -1,9 +1,9 @@
 package main
 
 import (
-    "superapps/controllers"
 	helper "superapps/helpers"
 	middleware "superapps/middlewares"
+    "superapps/controllers"
     "net/http"
     "os"
     "fmt"
@@ -40,10 +40,10 @@ func main() {
 	router.HandleFunc("/api/v1/resend-otp", controllers.ResendOtp).Methods("POST")
 	router.HandleFunc("/api/v1/verify-otp", controllers.VerifyOtp).Methods("POST")
 
-	// News
-	router.HandleFunc("/api/v1/news", controllers.All).Methods("GET")
-	router.HandleFunc("/api/v1/news-upload-image", controllers.CreateImageNews).Methods("POST")
-	router.HandleFunc("/api/v1/news", controllers.CreateNews).Methods("POST")
+	// Content
+	router.HandleFunc("/api/v1/content", controllers.All).Methods("GET")
+	router.HandleFunc("/api/v1/content-upload", controllers.CreateMediaContent).Methods("POST")
+	router.HandleFunc("/api/v1/content", controllers.CreateContent).Methods("POST")
 
 	// Membernear
 	router.HandleFunc("/api/v1/membernear/all", controllers.GetMembernear).Methods("GET")

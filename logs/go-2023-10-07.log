@@ -1,4 +1,0 @@
-[ERROR]: 2023-10-07 19:59:12 - In Server: Missing auth token
-[ERROR]: 2023-10-07 20:24:38 - In Server: sql: Scan error on column index 0, name "lat": converting driver.Value type []uint8 (" -6.595038") to a float64: invalid syntax
-[ERROR]: 2023-10-07 20:24:42 - In Server: sql: Scan error on column index 0, name "lat": converting driver.Value type []uint8 (" -6.595038") to a float64: invalid syntax
-[ERROR]: 2023-10-07 23:14:34 - In Server: Get "https://maps.googleapis.com/maps/api/directions/json?origin=-6.402905,106.778419&destination=-6.402905,106.778419&key=AIzaSyBFRpXPf8BXaR22nDvvx2ghBfbUbGGX8N8": dial tcp 74.125.24.95:443: i/o timeout
