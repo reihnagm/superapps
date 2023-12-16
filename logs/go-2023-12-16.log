@@ -19,3 +19,13 @@
 [ERROR]: 2023-12-16 13:24:37 - In Server: Error 1052: Column 'uid' in field list is ambiguous
 [ERROR]: 2023-12-16 13:25:11 - In Server: Error 1052: Column 'user_id' in field list is ambiguous
 [ERROR]: 2023-12-16 13:25:11 - In Server: Error 1052: Column 'user_id' in field list is ambiguous
+[ERROR]: 2023-12-16 23:34:53 - In Server: APP_NAME headers is required
+[ERROR]: 2023-12-16 23:35:26 - In Server: id is required
+[ERROR]: 2023-12-16 23:36:42 - In Server: id is required
+[ERROR]: 2023-12-16 23:37:08 - In Server: id is required
+[ERROR]: 2023-12-16 23:37:22 - In Server: id is required
+[ERROR]: 2023-12-16 23:38:19 - In Server: id is required
+[INFO]: 2023-12-16 23:41:37 - Login success
+[ERROR]: 2023-12-16 23:41:44 - In Server: id is required
+[ERROR]: 2023-12-16 23:41:52 - In Server: id is required
+[ERROR]: 2023-12-16 23:43:47 - In Server: comment field is required

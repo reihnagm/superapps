@@ -4,13 +4,16 @@ import (
 	"superapps/entities"
 )
 
-type ContentApplicationResponse entities.ContentApplicationResponse
 type AllCountContent entities.AllCountContent
+type ContentApplicationResponse entities.ContentApplicationResponse
 type Content entities.Content
+type ReqContentComment entities.ReqContentComment
+type DelContentComment entities.DelContentComment
 type ContentComment entities.ContentComment
 type ContentCommentUser entities.ContentCommentUser
 type ContentCommentResponse entities.ContentCommentResponse
 type ContentCommentUserResponse entities.ContentCommentUserResponse
+type ReqContentLike entities.ReqContentLike
 type ContentLike entities.ContentLike
 type ContentLikeUser entities.ContentLikeUser
 type ContentLikeResponse entities.ContentLikeResponse

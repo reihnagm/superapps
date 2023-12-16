@@ -23,6 +23,7 @@ func All(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	helper.Logger("info", "Get all content success")
 	helper.ResponseWithPagination(w, http.StatusOK, false, "Successfully", 
 		result["total"], 
 		result["per_page"], 
@@ -74,7 +75,7 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 
 	claims, _ := token.Claims.(jwt.MapClaims)
 		
-	UserId, _ := claims["id"].(string)
+	userId, _ := claims["id"].(string)
 
 	appName := r.Header.Get("APP_NAME")
 	id	  	:= data.Uid
@@ -82,7 +83,7 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 	desc  	:= data.Description
 
 	data.AppName = appName
-	data.UserId = UserId
+	data.UserId = userId
 
 	if appName == "" {
 		helper.Logger("error", "In Server: APP_NAME headers is required")
@@ -115,6 +116,127 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Create Media success")
+	helper.Logger("info", "Create media success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
+}
+
+func CreateContentLike(w http.ResponseWriter, r *http.Request) {
+
+	data := &models.ReqContentLike{}
+
+	errCreateContentLike := json.NewDecoder(r.Body).Decode(data)
+
+	if errCreateContentLike != nil {
+		helper.Logger("error", "In Server: " + errCreateContentLike.Error())
+		return
+	}
+
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+		
+	userId, _ := claims["id"].(string)
+
+	contentId := data.ContentId
+
+	data.ContentId = contentId 
+	data.UserId = userId 
+
+	if contentId == "" {
+		helper.Logger("error", "In Server: content_id is required")
+		helper.Response(w, 400, true, "content_id is required", map[string]interface{}{})
+		return
+	}
+
+	_, err := service.CreateContentLike(data)
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Logger("info", "Create content like success")
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+}
+
+func CreateContentComment(w http.ResponseWriter, r *http.Request) {
+	
+	data := &models.ReqContentComment{}
+
+	errCreateContentComment := json.NewDecoder(r.Body).Decode(data)
+
+	if errCreateContentComment != nil {
+		helper.Logger("error", "In Server: " + errCreateContentComment.Error())
+		return
+	}
+
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+		
+	userId, _ := claims["id"].(string)
+
+	contentId	:= data.ContentId
+	comment 	:= data.Comment
+
+	data.ContentId = contentId 
+	data.Comment = comment
+	data.UserId = userId
+
+	if contentId == "" {
+		helper.Logger("error", "In Server: content_id is required")
+		helper.Response(w, 400, true, "content_id is required", map[string]interface{}{})
+		return
+	}
+
+	if  comment == "" {
+		helper.Logger("error", "In Server: comment field is required")
+		helper.Response(w, 400, true, "comment field is required", map[string]interface{}{})
+		return
+	} 
+
+	_, err := service.CreateContentComment(data)
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Logger("info", "Create content comment success")
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+}
+
+func DeleteContentComment(w http.ResponseWriter, r *http.Request) {
+	data := &models.DelContentComment{}
+
+	errDelContentComment := json.NewDecoder(r.Body).Decode(data)
+
+	if errDelContentComment != nil {
+		helper.Logger("error", "In Server: " + errDelContentComment.Error())
+		return
+	}
+
+	Uid := data.Uid
+
+	data.Uid = Uid
+
+	if  Uid == "" {
+		helper.Logger("error", "In Server: id field is required")
+		helper.Response(w, 400, true, "id field is required", map[string]interface{}{})
+		return
+	} 
+
+	_, err := service.DelContentComment(data)
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Logger("info", "Delete content comment success")
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
 }

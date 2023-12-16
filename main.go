@@ -45,6 +45,13 @@ func main() {
 	router.HandleFunc("/api/v1/content-upload", controllers.CreateMediaContent).Methods("POST")
 	router.HandleFunc("/api/v1/content", controllers.CreateContent).Methods("POST")
 
+	// Content Comment
+	router.HandleFunc("/api/v1/content/comment", controllers.CreateContentComment).Methods("POST")
+	router.HandleFunc("/api/v1/content/comment/delete", controllers.DeleteContentComment).Methods("POST")
+
+	// Content Like
+	router.HandleFunc("/api/v1/content/like", controllers.CreateContentLike).Methods("POST")
+
 	// Membernear
 	router.HandleFunc("/api/v1/membernear/all", controllers.GetMembernear).Methods("GET")
 

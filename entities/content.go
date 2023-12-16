@@ -16,6 +16,11 @@ type Content struct {
 	User 			ContentUserResponse `json:"user"`
 }
 
+type ReqContentLike struct {
+	ContentId	string `json:"content_id"`
+	UserId 		string 	`json:"user_id"`
+}
+
 type ContentLike struct {
 	Uid		 	string `json:"id"`
 	UserId 		string `json:"fullname"`
@@ -35,6 +40,16 @@ type ContentLikeResponse struct {
 type ContentLikeUserResponse struct {
 	UserId	 	string `json:"id"`
 	Fullname    string `json:"name"`
+}
+
+type ReqContentComment struct {
+	ContentId   string `json:"content_id"`
+	UserId		string `json:"user_id"`
+	Comment 	string `json:"comment"`
+}
+
+type DelContentComment struct {
+	Uid 		string `json:"id"`
 }
 
 type ContentComment struct {

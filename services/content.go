@@ -9,7 +9,7 @@ import (
 	models "superapps/models"
 	entities "superapps/entities"
 	helper "superapps/helpers"
-	// uuid "github.com/satori/go.uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 func GetContent(search, page, limit, appName string) (map[string]interface{}, error) {
@@ -243,15 +243,75 @@ func CreateContent(n *models.Content) (map[string]interface{}, error) {
 
 	ApplicationId := applications[0].Uid
 
-	// n.Uid = uuid.NewV4().String()
-
-	errInsertContent := db.Debug().Exec(`INSERT INTO contents (uid, title, description, app_id, user_id) 
+	errIns := db.Debug().Exec(`INSERT INTO contents (uid, title, description, app_id, user_id) 
 	VALUES ('`+n.Uid+`', '`+n.Title+`', '`+n.Description+`', '`+ApplicationId+`', '`+n.UserId+`')`).Error
 
-	if errInsertContent != nil {
-		helper.Logger("error", "In Server: "+errInsertContent.Error())
-		return nil, errors.New(errInsertContent.Error())
+	if errIns != nil {
+		helper.Logger("error", "In Server: "+errIns.Error())
+		return nil, errors.New(errIns.Error())
 	}	
 
 	return map[string]interface{}{}, nil
+}
+
+func CreateContentLike(l *models.ReqContentLike) (map[string]interface{}, error) {
+	
+	contentLike := []entities.ContentLike{}
+
+	uid := uuid.NewV4().String()
+
+	checkLike := db.Debug().Raw(`SELECT uid FROM content_likes WHERE user_id = '`+l.UserId+`'`).Scan(&contentLike).Error
+	
+	if checkLike != nil {
+		helper.Logger("error", "In Server: "+checkLike.Error())
+		return nil, errors.New(checkLike.Error())
+	}	
+
+	isLikeExist := len(contentLike)
+
+	if isLikeExist != 0 {
+		delLike := db.Debug().Exec(`DELETE FROM content_likes WHERE user_id = '`+l.UserId+`'`).Error
+	
+		if delLike != nil {
+			helper.Logger("error", "In Server: "+delLike.Error())
+			return nil, errors.New(delLike.Error())
+		}	
+	} else {
+		createLike := db.Debug().Exec(`INSERT INTO content_likes (uid, content_id, user_id) 
+		VALUES ('`+uid+`', '`+l.ContentId+`', '`+l.UserId+`')`).Error
+	
+		if createLike != nil {
+			helper.Logger("error", "In Server: "+createLike.Error())
+			return nil, errors.New(createLike.Error())
+		}	
+	}
+
+	return map[string]interface{}{}, nil 
+}
+
+func CreateContentComment(c *models.ReqContentComment) (map[string]interface{}, error) {
+	
+	uid := uuid.NewV4().String()
+
+	errIns := db.Debug().Exec(`INSERT INTO content_comments (uid, content_id, comment, user_id) 
+	VALUES ('`+uid+`', '`+c.ContentId+`', '`+c.Comment+`', '`+c.UserId+`')`).Error
+
+	if errIns != nil {
+		helper.Logger("error", "In Server: "+errIns.Error())
+		return nil, errors.New(errIns.Error())
+	}
+
+	return map[string]interface{}{}, nil 
+}
+
+func DelContentComment(d *models.DelContentComment) (map[string]interface{}, error) {
+	
+	errDel := db.Debug().Exec(`DELETE FROM content_comments WHERE uid = '`+d.Uid+`'`).Error
+
+	if errDel != nil {
+		helper.Logger("error", "In Server: "+errDel.Error())
+		return nil, errors.New(errDel.Error())
+	}
+
+	return map[string]interface{}{}, nil 
 }
