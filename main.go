@@ -52,6 +52,9 @@ func main() {
 	// Content Like
 	router.HandleFunc("/api/v1/content/like", controllers.CreateContentLike).Methods("POST")
 
+	// Content Unlike
+	router.HandleFunc("/api/v1/content/unlike", controllers.CreateContentUnlike).Methods("POST")
+
 	// Membernear
 	router.HandleFunc("/api/v1/membernear/all", controllers.GetMembernear).Methods("GET")
 

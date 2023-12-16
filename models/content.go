@@ -14,6 +14,7 @@ type ContentCommentUser entities.ContentCommentUser
 type ContentCommentResponse entities.ContentCommentResponse
 type ContentCommentUserResponse entities.ContentCommentUserResponse
 type ReqContentLike entities.ReqContentLike
+type ReqContentUnlike entities.ReqContentUnlike
 type ContentLike entities.ContentLike
 type ContentLikeUser entities.ContentLikeUser
 type ContentLikeResponse entities.ContentLikeResponse

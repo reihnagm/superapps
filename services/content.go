@@ -27,6 +27,10 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 	var contentLikeAssign entities.ContentLikeResponse
 	var contentLikeUserAssign entities.ContentLikeUserResponse
 
+	var contentUnlike entities.ContentUnlike
+	var contentUnlikeAssign entities.ContentUnlikeResponse
+	var contentUnlikeUserAssign entities.ContentUnlikeUserResponse
+
 	var contentComment entities.ContentComment
 	var contentCommentAssign entities.ContentCommentResponse
 	var contentCommentUserAssign entities.ContentCommentUserResponse
@@ -151,6 +155,35 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		
 		rows.Close()
 
+		var dataContentUnlike = make([]entities.ContentUnlikeResponse, 0)
+
+		rows, errContentUnlikeQuery := db.Debug().Raw(`SELECT cl.uid, p.user_id, p.fullname FROM content_unlikes cl 
+		INNER JOIN user_profiles p ON p.user_id = cl.user_id
+		WHERE content_id = '`+content.Uid+`'`).Rows()
+
+		if errContentUnlikeQuery != nil {
+			helper.Logger("error", "In Server: "+errContentUnlikeQuery.Error())
+			return nil, errors.New(errContentUnlikeQuery.Error())
+		}
+
+		for rows.Next() {
+			db.ScanRows(rows, &contentUnlike)
+
+			
+			if contentUnlike.Uid != "" {
+
+				contentUnlikeUserAssign.UserId = contentUnlike.UserId
+				contentUnlikeUserAssign.Fullname = contentUnlike.Fullname
+
+				contentUnlikeAssign.Uid = contentUnlike.Uid
+				contentUnlikeAssign.User = contentUnlikeUserAssign
+
+				dataContentUnlike = append(dataContentUnlike, contentUnlikeAssign)
+			}
+		}
+		
+		rows.Close()
+
 		var dataContentComment = make([]entities.ContentCommentResponse, 0)
 
 		rows, errContentCommentQuery := db.Debug().Raw(`SELECT cc.uid, cc.comment, cc.user_id, p.fullname FROM content_comments cc
@@ -192,6 +225,7 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 
 		contentAssign.File = dataContentMedia
 		contentAssign.Like = dataContentLike
+		contentAssign.Unlike = dataContentUnlike
 		contentAssign.Comment = dataContentComment
 
 		contentAssign.App = appAssign
@@ -283,6 +317,41 @@ func CreateContentLike(l *models.ReqContentLike) (map[string]interface{}, error)
 		if createLike != nil {
 			helper.Logger("error", "In Server: "+createLike.Error())
 			return nil, errors.New(createLike.Error())
+		}	
+	}
+
+	return map[string]interface{}{}, nil 
+}
+
+func CreateContentUnlike(l *models.ReqContentUnlike) (map[string]interface{}, error) {
+	
+	contentUnlike := []entities.ContentUnlike{}
+
+	uid := uuid.NewV4().String()
+
+	checkUnlike := db.Debug().Raw(`SELECT uid FROM content_unlikes WHERE user_id = '`+l.UserId+`'`).Scan(&contentUnlike).Error
+	
+	if checkUnlike != nil {
+		helper.Logger("error", "In Server: "+checkUnlike.Error())
+		return nil, errors.New(checkUnlike.Error())
+	}	
+
+	isUnlikeExist := len(contentUnlike)
+
+	if isUnlikeExist != 0 {
+		delUnlike := db.Debug().Exec(`DELETE FROM content_unlikes WHERE user_id = '`+l.UserId+`'`).Error
+	
+		if delUnlike != nil {
+			helper.Logger("error", "In Server: "+delUnlike.Error())
+			return nil, errors.New(delUnlike.Error())
+		}	
+	} else {
+		createUnlike := db.Debug().Exec(`INSERT INTO content_unlikes (uid, content_id, user_id) 
+		VALUES ('`+uid+`', '`+l.ContentId+`', '`+l.UserId+`')`).Error
+	
+		if createUnlike != nil {
+			helper.Logger("error", "In Server: "+createUnlike.Error())
+			return nil, errors.New(createUnlike.Error())
 		}	
 	}
 

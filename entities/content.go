@@ -4,6 +4,8 @@ import (
 	"time"
 )
 
+// CONTENT -------
+
 type Content struct {
 	Uid				string `json:"id"`
 	Title 			string `json:"title"`
@@ -16,7 +18,28 @@ type Content struct {
 	User 			ContentUserResponse `json:"user"`
 }
 
+
+type ContentResponse struct {
+	Uid			string `json:"id"`
+	Title 		string `json:"title"`
+	Description	string `json:"desc"`
+	File		[]ContentMediaResponse `json:"files"`
+	Like		[]ContentLikeResponse `json:"likes"`
+	Unlike		[]ContentUnlikeResponse `json:"unlikes"`
+	Comment 	[]ContentCommentResponse `json:"comments"`
+	App 		ContentApplicationResponse `json:"app"`
+	User 		ContentUserResponse `json:"user"`
+	CreatedAt   string `json:"created_at"`
+}
+
+// --------------
+
 type ReqContentLike struct {
+	ContentId	string `json:"content_id"`
+	UserId 		string 	`json:"user_id"`
+}
+
+type ReqContentUnlike struct {
 	ContentId	string `json:"content_id"`
 	UserId 		string 	`json:"user_id"`
 }
@@ -27,7 +50,18 @@ type ContentLike struct {
 	Fullname 	string `json:"fullname"`
 }
 
+type ContentUnlike struct {
+	Uid		 	string `json:"id"`
+	UserId 		string `json:"fullname"`
+	Fullname 	string `json:"fullname"`
+}
+
 type ContentLikeUser struct {
+	UserId		string `json:"id"`
+	Fullname	string `json:"name"`
+}
+
+type ContentUnlikeUser struct {
 	UserId		string `json:"id"`
 	Fullname	string `json:"name"`
 }
@@ -37,7 +71,17 @@ type ContentLikeResponse struct {
 	User	 	ContentLikeUserResponse `json:"user"`
 }
 
+type ContentUnlikeResponse struct {
+	Uid		 	string `json:"id"`
+	User	 	ContentUnlikeUserResponse `json:"user"`
+}
+
 type ContentLikeUserResponse struct {
+	UserId	 	string `json:"id"`
+	Fullname    string `json:"name"`
+}
+
+type ContentUnlikeUserResponse struct {
 	UserId	 	string `json:"id"`
 	Fullname    string `json:"name"`
 }
@@ -88,18 +132,6 @@ type ContentMedia struct {
 
 type AllCountContent struct {
 	Uid			  string `json:"id"`
-}
-
-type ContentResponse struct {
-	Uid			string `json:"id"`
-	Title 		string `json:"title"`
-	Description	string `json:"desc"`
-	File		[]ContentMediaResponse `json:"files"`
-	Like		[]ContentLikeResponse `json:"likes"`
-	Comment 	[]ContentCommentResponse `json:"comments"`
-	App 		ContentApplicationResponse `json:"app"`
-	User 		ContentUserResponse `json:"user"`
-	CreatedAt   string `json:"created_at"`
 }
 
 type ContentMediaResponse struct {

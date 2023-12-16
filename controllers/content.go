@@ -161,6 +161,47 @@ func CreateContentLike(w http.ResponseWriter, r *http.Request) {
 	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
 }
 
+func CreateContentUnlike(w http.ResponseWriter, r *http.Request) {
+
+	data := &models.ReqContentUnlike{}
+
+	errCreateContentUnlike := json.NewDecoder(r.Body).Decode(data)
+
+	if errCreateContentUnlike != nil {
+		helper.Logger("error", "In Server: " + errCreateContentUnlike.Error())
+		return
+	}
+
+	tokenHeader := r.Header.Get("Authorization")
+
+	token := helper.DecodeJwt(tokenHeader)
+
+	claims, _ := token.Claims.(jwt.MapClaims)
+		
+	userId, _ := claims["id"].(string)
+
+	contentId := data.ContentId
+
+	data.ContentId = contentId 
+	data.UserId = userId 
+
+	if contentId == "" {
+		helper.Logger("error", "In Server: content_id is required")
+		helper.Response(w, 400, true, "content_id is required", map[string]interface{}{})
+		return
+	}
+
+	_, err := service.CreateContentUnlike(data)
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Logger("info", "Create content unlike success")
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+}
+
 func CreateContentComment(w http.ResponseWriter, r *http.Request) {
 	
 	data := &models.ReqContentComment{}

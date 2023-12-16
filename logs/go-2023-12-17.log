@@ -14,3 +14,19 @@
 [INFO]: 2023-12-17 00:56:11 - Get all content success
 [INFO]: 2023-12-17 00:56:16 - Create content like success
 [INFO]: 2023-12-17 00:56:17 - Get all content success
+[INFO]: 2023-12-17 01:02:20 - Create content comment success
+[INFO]: 2023-12-17 01:02:30 - Get all content success
+[INFO]: 2023-12-17 01:07:48 - Get all content success
+[INFO]: 2023-12-17 01:18:24 - Get all content success
+[ERROR]: 2023-12-17 01:20:31 - In Server: Error 1364: Field 'id' doesn't have a default value
+[INFO]: 2023-12-17 01:20:44 - Create content unlike success
+[INFO]: 2023-12-17 01:20:56 - Get all content success
+[INFO]: 2023-12-17 01:21:45 - Get all content success
+[INFO]: 2023-12-17 01:21:46 - Get all content success
+[INFO]: 2023-12-17 01:21:47 - Get all content success
+[INFO]: 2023-12-17 01:21:48 - Get all content success
+[INFO]: 2023-12-17 01:21:48 - Get all content success
+[INFO]: 2023-12-17 01:22:28 - Get all content success
+[INFO]: 2023-12-17 01:22:29 - Get all content success
+[INFO]: 2023-12-17 01:23:11 - Get all content success
+[INFO]: 2023-12-17 01:23:19 - Get all content success
