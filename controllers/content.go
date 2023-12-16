@@ -37,7 +37,7 @@ func All(w http.ResponseWriter, r *http.Request) {
 
 func CreateMediaContent(w http.ResponseWriter ,r*http.Request) {
 
-	data := &models.ContentMediaForm{}
+	data := &models.ContentMedia{}
 
 	errCreateMedia := json.NewDecoder(r.Body).Decode(data)
 

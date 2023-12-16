@@ -16,12 +16,56 @@ type Content struct {
 	User 			ContentUserResponse `json:"user"`
 }
 
+type ContentLike struct {
+	Uid		 	string `json:"id"`
+	UserId 		string `json:"fullname"`
+	Fullname 	string `json:"fullname"`
+}
+
+type ContentLikeUser struct {
+	UserId		string `json:"id"`
+	Fullname	string `json:"name"`
+}
+
+type ContentLikeResponse struct {
+	Uid		 	string `json:"id"`
+	User	 	ContentLikeUserResponse `json:"user"`
+}
+
+type ContentLikeUserResponse struct {
+	UserId	 	string `json:"id"`
+	Fullname    string `json:"name"`
+}
+
+type ContentComment struct {
+	Uid 		string `json:"id"`
+	UserId		string `json:"user_id"`
+	Fullname 	string `json:"fullname"`
+	Comment	    string `json:"comment"`
+}
+
+type ContentCommentUser struct {
+	UserId		string `json:"user_id"`
+	Fullname    string `json:"name"`
+}
+
+type ContentCommentResponse struct {
+	Uid 		string `json:"id"`
+	Comment	    string `json:"comment"`
+	User	 	ContentCommentUserResponse `json:"user"`
+}
+
+type ContentCommentUserResponse struct {
+	UserId		string `json:"user_id"`
+	Fullname    string `json:"name"`
+}
+
 type ContentApplicationResponse struct {
 	ApplicationId 	string `json:"id"`
 	ApplicationName string `json:"name"`
 }
 
-type ContentMediaForm struct {
+type ContentMedia struct {
 	ContentId	string `json:"content_id"`
 	Path 		string `json:"path"`
 	Size		int    `json:"size"`
@@ -36,12 +80,15 @@ type ContentResponse struct {
 	Title 		string `json:"title"`
 	Description	string `json:"desc"`
 	File		[]ContentMediaResponse `json:"files"`
+	Like		[]ContentLikeResponse `json:"likes"`
+	Comment 	[]ContentCommentResponse `json:"comments"`
 	App 		ContentApplicationResponse `json:"app"`
 	User 		ContentUserResponse `json:"user"`
 	CreatedAt   string `json:"created_at"`
 }
 
 type ContentMediaResponse struct {
+	ContentId	string `json:"content_id"`
 	Path 		string `json:"path"`
 	Size		int    `json:"size"`
 }
