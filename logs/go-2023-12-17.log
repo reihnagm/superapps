@@ -30,3 +30,12 @@
 [INFO]: 2023-12-17 01:22:29 - Get all content success
 [INFO]: 2023-12-17 01:23:11 - Get all content success
 [INFO]: 2023-12-17 01:23:19 - Get all content success
+[INFO]: 2023-12-17 14:51:58 - Get all content success
+[INFO]: 2023-12-17 14:52:08 - Get all content success
+[INFO]: 2023-12-17 14:54:15 - Get all content success
+[ERROR]: 2023-12-17 14:55:00 - In Server: invalid character '}' looking for beginning of object key string
+[ERROR]: 2023-12-17 14:55:01 - In Server: invalid character '}' looking for beginning of object key string
+[ERROR]: 2023-12-17 14:55:02 - In Server: invalid character '}' looking for beginning of object key string
+[INFO]: 2023-12-17 14:55:12 - Create media success
+[INFO]: 2023-12-17 14:57:57 - Create media success
+[INFO]: 2023-12-17 14:58:58 - Create media success

@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"math"
 	"errors"
+	"strings"
 	// "fmt"
 	models "superapps/models"
 	entities "superapps/entities"
@@ -69,7 +70,7 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 	
 	nextPage = pageinteger + 1
 
-	rows, errContentQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.description, n.user_id, n.created_at, 
+	rows, errContentQuery := db.Debug().Raw(`SELECT n.uid, n.title, n.types, n.description, n.user_id, n.created_at, 
 	app.name AS app_name, app.uid AS app_id 
 	FROM contents n 
 	INNER JOIN applications app ON app.uid = n.app_id 
@@ -231,6 +232,7 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		contentAssign.App = appAssign
 		contentAssign.User = userAssign
 		contentAssign.CreatedAt = createdAt
+		contentAssign.Types = content.Types
 
 		appendContentAssign = append(appendContentAssign, contentAssign)
 	}
@@ -262,6 +264,8 @@ func CreateMediaContent(n *models.ContentMedia) (map[string]interface{}, error) 
 func CreateContent(n *models.Content) (map[string]interface{}, error) {
 
 	applications := []entities.Application{}
+	types := []entities.Types{}
+
 	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+n.AppName+`'`).Scan(&applications).Error
 	
 	if errCheckApp != nil {
@@ -275,10 +279,23 @@ func CreateContent(n *models.Content) (map[string]interface{}, error) {
 		return nil, errors.New("App not found")
 	} 
 
+	errTypes := db.Debug().Raw(`SELECT name FROM content_types WHERE name = '`+n.Types+`'`).Scan(&types).Error
+	
+	if errTypes != nil {
+		helper.Logger("error", "In Server: "+errTypes.Error())
+		return nil, errors.New(errTypes.Error())
+	}
+
+	isTypesExist := len(types)
+
+	if isTypesExist == 0 {
+		return nil, errors.New("Types not found")
+	} 
+
 	ApplicationId := applications[0].Uid
 
-	errIns := db.Debug().Exec(`INSERT INTO contents (uid, title, description, app_id, user_id) 
-	VALUES ('`+n.Uid+`', '`+n.Title+`', '`+n.Description+`', '`+ApplicationId+`', '`+n.UserId+`')`).Error
+	errIns := db.Debug().Exec(`INSERT INTO contents (uid, title, description, types, app_id, user_id) 
+	VALUES ('`+n.Uid+`', '`+n.Title+`', '`+n.Description+`', '`+strings.ToUpper(n.Types)+`' ,'`+ApplicationId+`', '`+n.UserId+`')`).Error
 
 	if errIns != nil {
 		helper.Logger("error", "In Server: "+errIns.Error())

@@ -14,6 +14,7 @@ type Content struct {
 	CreatedAt		time.Time `json:"created_at"`
 	AppId 			string `json:"app_id"`
 	AppName 		string `json:"app_name"`
+	Types			string `json:"types"`
 	Application 	ContentApplicationResponse `json:"app"`
 	User 			ContentUserResponse `json:"user"`
 }
@@ -29,7 +30,16 @@ type ContentResponse struct {
 	Comment 	[]ContentCommentResponse `json:"comments"`
 	App 		ContentApplicationResponse `json:"app"`
 	User 		ContentUserResponse `json:"user"`
+	Types		string `json:"types"`
 	CreatedAt   string `json:"created_at"`
+}
+
+// --------------
+
+// Types --------
+
+type Types struct {
+	types 	string `json:"types"`
 }
 
 // --------------
