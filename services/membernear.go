@@ -50,7 +50,7 @@ func GetMembernear(originLat, originLng, appName string) (map[string]interface{}
 
 		var url = os.Getenv("GMAP_URL") + "?origin=" + originLat + "," + originLng + "&destination=" + destLat + "," + destLng + "&key=" + os.Getenv("GMAP_KEY")
 
-		resp, errRes := http.Get(url)
+		resp, errRes := http.NewRequest(http.MethodGet, url, nil)  
 
 		if errRes != nil {
 			helper.Logger("error", "In Server: "+errRes.Error())

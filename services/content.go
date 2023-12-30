@@ -83,7 +83,12 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 	}
 
 	for rows.Next() {
-		db.ScanRows(rows, &content)
+		errScanRows := db.ScanRows(rows, &content)
+
+		if errScanRows != nil {
+			helper.Logger("error", "In Server: "+errScanRows.Error())
+			return nil, errors.New(errScanRows.Error())
+		}
 
 		rows, errUserQuery := db.Debug().Raw(`SELECT email, phone, fullname FROM users u 
 		INNER JOIN user_profiles p ON p.user_id = u.uid 
@@ -95,14 +100,17 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		}
 
 		for rows.Next() {
-			db.ScanRows(rows, &user)
+			errScanRows := db.ScanRows(rows, &user)
 			
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
+	
 			userAssign.Fullname = user.Fullname
 			userAssign.Email = user.Email
 			userAssign.Phone = user.Phone
 		}
-
-		rows.Close()
 
 		var dataContentMedia = make([]entities.ContentMediaResponse, 0) 
 
@@ -114,8 +122,13 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		}
 
 		for rows.Next() {
-			db.ScanRows(rows, &contentMedia)
+			errScanRows = db.ScanRows(rows, &contentMedia)
 			
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
+
 			if contentMedia.Path != "" {
 				contentMediaAssign.ContentId = contentMedia.ContentId
 				contentMediaAssign.Path = contentMedia.Path
@@ -124,8 +137,6 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 				dataContentMedia = append(dataContentMedia, contentMediaAssign)
 			}
 		}
-
-		rows.Close()
 
 		var dataContentLike = make([]entities.ContentLikeResponse, 0)
 
@@ -139,8 +150,12 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		}
 
 		for rows.Next() {
-			db.ScanRows(rows, &contentLike)
+			errScanRows = db.ScanRows(rows, &contentLike)
 
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
 			
 			if contentLike.Uid != "" {
 
@@ -154,8 +169,6 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 			}
 		}
 		
-		rows.Close()
-
 		var dataContentUnlike = make([]entities.ContentUnlikeResponse, 0)
 
 		rows, errContentUnlikeQuery := db.Debug().Raw(`SELECT cl.uid, p.user_id, p.fullname FROM content_unlikes cl 
@@ -168,8 +181,12 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		}
 
 		for rows.Next() {
-			db.ScanRows(rows, &contentUnlike)
+			errScanRows = db.ScanRows(rows, &contentUnlike)
 
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
 			
 			if contentUnlike.Uid != "" {
 
@@ -183,8 +200,6 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 			}
 		}
 		
-		rows.Close()
-
 		var dataContentComment = make([]entities.ContentCommentResponse, 0)
 
 		rows, errContentCommentQuery := db.Debug().Raw(`SELECT cc.uid, cc.comment, cc.user_id, p.fullname FROM content_comments cc
@@ -197,7 +212,12 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 		}
 
 		for rows.Next() {
-			db.ScanRows(rows, &contentComment)
+			errScanRows = db.ScanRows(rows, &contentComment)
+
+			if errScanRows != nil {
+				helper.Logger("error", "In Server: "+errScanRows.Error())
+				return nil, errors.New(errScanRows.Error())
+			}
 			
 			if contentComment.Uid != "" {
 
@@ -212,8 +232,6 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 				dataContentComment = append(dataContentComment, contentCommentAssign)
 			}
 		}
-		
-		rows.Close()
 		
 		var createdAt = content.CreatedAt.Format("2006-01-02 15:04")
 
@@ -236,8 +254,6 @@ func GetContent(search, page, limit, appName string) (map[string]interface{}, er
 
 		appendContentAssign = append(appendContentAssign, contentAssign)
 	}
-
-	rows.Close()
 
 	var nextUrl = strconv.Itoa(nextPage)
 	var prevUrl = strconv.Itoa(prevPage)

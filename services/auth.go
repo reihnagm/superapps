@@ -74,44 +74,44 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 func ResendOtp(u *models.User) (map[string]interface{}, error) {
 
-	users := []entities.UserOtp{}
-	query := `SELECT email_active, otp_date FROM users 
-	WHERE (email = '`+u.Email+`' OR phone = '`+u.Email+`')`
+	// users := []entities.UserOtp{}
+	// query := `SELECT email_active, otp_date FROM users 
+	// WHERE (email = '`+u.Email+`' OR phone = '`+u.Email+`')`
 
-	err := db.Debug().Raw(query).Scan(&users).Error
+	// err := db.Debug().Raw(query).Scan(&users).Error
 
-	if err != nil {
-		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New(err.Error())
-	}
+	// if err != nil {
+	// 	helper.Logger("error", "In Server: "+err.Error())
+	// 	return nil, errors.New(err.Error())
+	// }
 
-	isUserExist := len(users)
+	// isUserExist := len(users)
 
-	if isUserExist == 0 {
-		return nil, errors.New("User not found")
-	} 
+	// if isUserExist == 0 {
+	// 	return nil, errors.New("User not found")
+	// } 
 
-	emailActive := users[0].EmailActive
-	otpDate := users[0].OtpDate
+	// emailActive := users[0].EmailActive
+	// otpDate := users[0].OtpDate
 
-	if emailActive == 1 {
-		helper.Logger("error", "In Server: Account is already active")
-		return nil, errors.New("Account is already active")
-	}
+	// if emailActive == 1 {
+	// 	helper.Logger("error", "In Server: Account is already active")
+	// 	return nil, errors.New("Account is already active")
+	// }
 
-	currentTime := time.Now()
-    elapsed := currentTime.Sub(otpDate)
+	// currentTime := time.Now()
+    // elapsed := currentTime.Sub(otpDate)
 
-	otp := helper.CodeOtp()
+	otp := helper.CodeOtpSecure()
 
-	if elapsed >= 1*time.Minute {
-		errUpdateResendOtp:= db.Debug().Exec(`UPDATE users SET otp = '`+otp+`', otp_date = NOW() WHERE email = '`+u.Email+`'`).Error
+	// if elapsed >= 1*time.Minute {
+	// 	errUpdateResendOtp:= db.Debug().Exec(`UPDATE users SET otp = '`+otp+`', otp_date = NOW() WHERE email = '`+u.Email+`'`).Error
 
-		if errUpdateResendOtp != nil {
-			helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
-			return nil, errors.New(errUpdateResendOtp.Error())
-		}
-    } 
+	// 	if errUpdateResendOtp != nil {
+	// 		helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
+	// 		return nil, errors.New(errUpdateResendOtp.Error())
+	// 	}
+    // } 
 
 	return map[string]interface{}{
 		"otp": otp,
@@ -144,7 +144,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 	user.Id = users[0].Uid
 
 	if emailActive == 0 { 
-		err := db.Debug().Exec(`UPDATE users SET otp = '`+helper.CodeOtp()+`', otp_date = NOW() 
+		err := db.Debug().Exec(`UPDATE users SET otp = '`+helper.CodeOtpSecure()+`', otp_date = NOW() 
 		WHERE email = '`+u.Val+`' OR phone = '`+u.Val+`'`).Error
 		
 		if err != nil {
@@ -194,7 +194,7 @@ func Register(u *models.User) (map[string]interface{}, error) {
 	user.Phone = u.Phone
 	user.Password = string(hashedPassword)
 
-	otp := helper.CodeOtp()
+	otp := helper.CodeOtpSecure()
 
 	users := []entities.CheckAccount{}
 	errCheckAccount := db.Debug().Raw(`SELECT email FROM users WHERE email = '`+u.Email+`'`).Scan(&users).Error

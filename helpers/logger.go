@@ -4,6 +4,7 @@ import (
 	"time"
 	"os"
 	"io"
+	"path/filepath"
 	"github.com/sirupsen/logrus"
 	"github.com/t-tomalak/logrus-easy-formatter"
 )
@@ -12,7 +13,7 @@ func Logger(logType string, message string) {
 	
 	time := time.Now().Format("2006-01-02")
 
-	file,_ := os.OpenFile("logs/go-"+time+".log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
+	file, _ := os.OpenFile(filepath.Clean("logs/go-"+time+".log"), os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0600)
 
 	logger := &logrus.Logger{
         Out:   os.Stderr,

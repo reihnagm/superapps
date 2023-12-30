@@ -5,11 +5,13 @@ package helper
 // )
 
 import (
-	"math/rand"
+	// "math/rand"
+	crand "crypto/rand"
     "regexp"
 	"strings"
 	"os"
-    "time"
+	"encoding/base32"
+    // "time"
 	"github.com/dgrijalva/jwt-go"
     "golang.org/x/crypto/bcrypt"
 )
@@ -36,17 +38,38 @@ func DecodeJwt(tokenP string) *jwt.Token {
 	return token
 }
 
-func CodeOtp() string {
+// NOT SECURE FOR USE
+// func CodeOtp() string {
 
-	rand.Seed(time.Now().UTC().UnixNano())
+// 	rand.Seed(time.Now().UTC().UnixNano())
 	
-	b := make([]rune, 4)
-	l := len(letterRunes)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(l)]
+// 	b := make([]rune, 4)
+// 	l := len(letterRunes)
+// 	for i := range b {
+// 		b[i] = letterRunes[rand.Intn(l)]
+// 	}
+
+// 	return string(b)
+// }
+
+func CodeOtpSecure() string {
+	// Calculate the number of random bytes needed for the specified length
+	numBytes := (4 * 5) / 8
+
+	// Generate random bytes
+	randomBytes := make([]byte, numBytes)
+	_, err := crand.Read(randomBytes)
+	if err != nil {
+		return ""
 	}
 
-	return string(b)
+	// Encode the random bytes to base32
+	otp := base32.StdEncoding.EncodeToString(randomBytes)
+
+	// Truncate to the desired length
+	otp = otp[:4]
+
+	return string(otp)
 }
 
 

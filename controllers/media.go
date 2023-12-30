@@ -35,21 +35,38 @@ func Upload(w http.ResponseWriter, r *http.Request) {
 	parentFolder := "public"
 	subFolder := r.FormValue("folder")
 
- 	os.Mkdir(parentFolder, os.ModePerm)
+ 	errParentMkdir := os.Mkdir(parentFolder, os.ModePerm)
+
+	if errParentMkdir != nil {
+		helper.Response(w, 400, true, errParentMkdir.Error(), map[string]interface{}{})
+		return
+	}
 
 	subFolderPath := filepath.Join(parentFolder, subFolder)
 
-	os.Mkdir(subFolderPath, os.ModePerm)
+	errSubFolder := os.Mkdir(subFolderPath, os.ModePerm)
+	
+	if errSubFolder != nil {
+		helper.Response(w, 400, true, errSubFolder.Error(), map[string]interface{}{})
+		return
+	}
 
 	filePath := filepath.Join(subFolderPath, handler.Filename)
-	f, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE, 0666)
+	f, err := os.OpenFile(filepath.Clean(filePath), os.O_WRONLY|os.O_CREATE, 0600)
+
 	if err != nil {
 		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
 		return
 	}
+
 	defer f.Close()
 
-	io.Copy(f, file)
+	_, errCopy := io.Copy(f, file)
+
+	if errCopy != nil {
+		helper.Response(w, 400, true, errCopy.Error(), map[string]interface{}{})
+		return
+	}
 
 	var mediaAssign MediaResponseEntity
 

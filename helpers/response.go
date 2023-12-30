@@ -19,13 +19,21 @@ func MessageError(status int, err bool, message string) map[string]interface{} {
 func Response(w http.ResponseWriter, status int, err bool, message string, data any) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(&entities.Response{status, err, message, data})
+	jsonEncoder := json.NewEncoder(w)
+	errs := jsonEncoder.Encode(&entities.Response{status, err, message, data})
+	if errs != nil {
+		Logger("error", errs.Error())
+	}
 }
 
 func ResponseWithPagination(w http.ResponseWriter, status int, err bool, message string, total any, perPage any, prevPage any, nextPage any, currentPage any, nextUrl any, prevUrl, data any) {
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
-	json.NewEncoder(w).Encode(&entities.ResponseWithPagination{status, err, message, total, perPage, prevPage, nextPage, currentPage, nextUrl, prevUrl, data})
+	jsonEncoder := json.NewEncoder(w)
+	errs := jsonEncoder.Encode(&entities.ResponseWithPagination{status, err, message, total, perPage, prevPage, nextPage, currentPage, nextUrl, prevUrl, data})
+	if errs != nil {
+		Logger("error", errs.Error())
+	}
 }
 
 func FormatError(err string) error {
