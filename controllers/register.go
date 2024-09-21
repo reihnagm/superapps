@@ -3,9 +3,9 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	helper "superapps/helpers"
 	"superapps/models"
 	service "superapps/services"
-	helper "superapps/helpers"
 )
 
 func Register(w http.ResponseWriter, r *http.Request) {
@@ -15,46 +15,46 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(data)
 
 	if err != nil {
-		helper.Logger("error", "In Server: " + err.Error())
+		helper.Logger("error", "In Server: "+err.Error())
 		helper.Response(w, 400, true, "Internal server error ("+err.Error()+")", map[string]interface{}{})
 		return
 	}
 
-	email 	 := data.Email
+	email := data.Email
 	password := data.Password
-	phone 	 := data.Phone
-	AppName  := data.AppName
+	phone := data.Phone
+	AppName := data.AppName
 
-	if  email == "" {
+	if email == "" {
 		helper.Logger("error", "In Server: email field is required")
 		helper.Response(w, 400, true, "email field is required", map[string]interface{}{})
 		return
-	} 
+	}
 
 	validateEmail := helper.IsValidEmail(email)
 
-	if validateEmail != true {
+	if !validateEmail {
 		helper.Logger("error", "In Server: E-mail address is invalid")
 		helper.Response(w, 400, true, "E-mail address is invalid", map[string]interface{}{})
 		return
-	} 
+	}
 
-	if  phone == "" {
+	if phone == "" {
 		helper.Logger("error", "In Server: phone field is required")
 		helper.Response(w, 400, true, "phone field is required", map[string]interface{}{})
 		return
-	} 
+	}
 
-	if  password == "" {
+	if password == "" {
 		helper.Logger("error", "In Server: password field is required")
 		helper.Response(w, 400, true, "password field is required", map[string]interface{}{})
 		return
-	} 
+	}
 
 	if AppName == "" {
 		helper.Logger("error", "In Server: app_name field is required")
 		helper.Response(w, 400, true, "app_name field is required", map[string]interface{}{})
-		return 
+		return
 	}
 
 	result, err := service.Register(data)

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 	"superapps/controllers"
@@ -23,15 +24,35 @@ func main() {
 	router := mux.NewRouter()
 	router.Use(middleware.JwtAuthentication)
 
-	dir, _ := os.Open("public")
+	// Check if the directory exists, create if it doesn't
+	errMkidr := os.MkdirAll("public", os.ModePerm) // os.ModePerm ensures directory is created with the correct permissions
+	if errMkidr != nil {
+		log.Fatalf("Failed to create or access directory: %v", err)
+	}
 
-	fileInfos, _ := dir.Readdir(-1)
+	// Open the public directory
+	dir, err := os.Open("public")
+	if err != nil {
+		log.Fatalf("Failed to open public directory: %v", err)
+	}
+	defer dir.Close()
 
+	// Read the directory contents
+	fileInfos, err := dir.Readdir(-1)
+	if err != nil {
+		log.Fatalf("Failed to read directory contents: %v", err)
+	}
+
+	// Loop through each file in the directory
 	for _, fileInfo := range fileInfos {
 		if fileInfo.IsDir() {
-			// Serving static content
+			// Define static and public paths
 			staticPath := "/" + fileInfo.Name() + "/"
 			publicPath := "./public/" + fileInfo.Name() + "/"
+
+			log.Printf("Serving static files from %s at %s", publicPath, staticPath)
+
+			// Register (override if already exists) the route to serve static content
 			router.PathPrefix(staticPath).Handler(http.StripPrefix(staticPath, http.FileServer(http.Dir(publicPath))))
 		}
 	}

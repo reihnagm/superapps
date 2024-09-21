@@ -215,11 +215,51 @@ Request :
 }
 ```
 
+## LIKE CONTENT
+
+Request : 
+- Method : POST
+- Endpoint : `/api/v1/content/like`
+- Body :
+
+```json
+{
+    "content_id": "b4413807-b5f6-48a5-abda-15673622f2f1"
+}
+```
+
+## UNLIKE CONTENT
+
+Request : 
+- Method : POST
+- Endpoint : `/api/v1/content/unlike`
+- Body :
+
+```json
+{
+    "content_id": "b4413807-b5f6-48a5-abda-15673622f2f1"
+}
+```
+
+## CREATE COMMENT CONTENT
+
+Request : 
+- Method : POST
+- Endpoint : `/api/v1/content/comment`
+- Body :
+
+```json
+{
+    "content_id": "b4413807-b5f6-48a5-abda-15673622f2f1",
+    "comment": "hello world"
+}
+```
+
 ## DELETE CONTENT
 
 Request : 
 - Method : DELETE
-- Endpoint : `/api/v1/content`
+- Endpoint : `/api/v1/content/delete`
 - Body :
 
 ```json
@@ -227,3 +267,53 @@ Request :
     "id": "b4413807-b5f6-48a5-abda-15673622f2f2",
 }
 ```
+
+## DELETE COMMENT CONTENT
+
+Request : 
+- Method : DELETE
+- Endpoint : `/api/v1/content/comment/delete`
+- Body :
+
+```json
+{
+    "id": "b4413807-b5f6-48a5-abda-15673622f2f2",
+}
+```
+
+## MEDIA UPLOAD
+
+Request Form-Data :  
+- Method : POST
+- Endpoint : `/api/v1/media/upload`
+- Body :
+
+```json
+{
+    "file": "[type file]",
+    "folder": "[type text]",
+}
+```
+
+Response :
+
+```json
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {
+        "path": "http://localhost:5004/test/fspmi.png",
+        "filename": "fspmi.png",
+        "size": 57466,
+        "mime": "image/png"
+    }
+}
+```
+
+## MEMBERNEAR
+
+Request Form-Data : 
+- Method : GET
+- Headers : APP_NAME 
+- Endpoint : `/api/v1/membernear/all?lat=-6.176132&lng=106.822864`
