@@ -65,7 +65,7 @@ Request :
 
 ```json
 {
-    "email": "reihanagam8@gmail.com",
+    "val": "reihanagam8@gmail.com",
     "otp": "SEEA"
 }
 ```
@@ -92,7 +92,7 @@ Request :
 
 ```json
 {
-    "email": "reihanagam8@gmail.com",
+    "val": "reihanagam8@gmail.com",
 }
 ```
 
@@ -109,11 +109,11 @@ Response :
 }
 ```
 
-## NEWS ALL
+## CONTENT ALL
 
 Request : 
 - Method : GET
-- Endpoint : `/api/v1/news?page=1&limit=10&search=&app_name=`
+- Endpoint : `/api/v1/content?page=1&limit=10&search&app_name=saka`
 
 Response : 
 
@@ -122,7 +122,7 @@ Response :
     "status": 200,
     "error": false,
     "message": "Successfully",
-    "total": 3,
+    "total": 2,
     "per_page": 1,
     "prev_page": 1,
     "next_page": 2,
@@ -131,51 +131,86 @@ Response :
     "prev_url": "http://localhost:5004?page=1",
     "data": [
         {
-            "id": "f25f0679-1920-48c9-a6e2-63bcf315498c",
+            "id": "b4413807-b5f6-48a5-abda-15673622f2f1",
             "title": "Title 1",
-            "desc": "lorem metus viverra tortor, eu tempus orci leo imperdiet purus. Nam nec consectetur mi, nec vestibulum nulla. Donec vel dui lectus. Etiam non scelerisque odio. Pellentesque eleifend nisi et odio commodo gravida. Vivamus pellentesque elementum eros, vitae ultrices magna sollicitudin ac.",
-            "images": [],
+            "desc": "Description 1",
+            "medias": [],
+            "likes": [
+                {
+                    "id": "0eca071f-4dd7-49a4-bf39-c774dae5f04e",
+                    "user": {
+                        "id": "8697faf2-c76e-4713-9514-e862fc0505f0",
+                        "name": ""
+                    }
+                }
+            ],
+            "unlikes": [
+                {
+                    "id": "87d7322d-05e8-4e14-8ac6-2cc199562ebc",
+                    "user": {
+                        "id": "8697faf2-c76e-4713-9514-e862fc0505f0",
+                        "name": ""
+                    }
+                }
+            ],
+            "comments": [
+                {
+                    "id": "4ce6dce2-00ee-4dd0-9562-7fa2bf933e6b",
+                    "comment": "hello world",
+                    "user": {
+                        "user_id": "8697faf2-c76e-4713-9514-e862fc0505f0",
+                        "name": ""
+                    }
+                }
+            ],
             "app": {
-                "id": "ada7582e-04dc-486d-819c-467986c1cb91",
-                "name": "My App"
+                "id": "dcba8c60-62f4-416b-953a-f6da0a607862",
+                "name": "saka"
             },
             "user": {
                 "fullname": "",
                 "email": "reihanagam7@gmail.com",
                 "phone": "089670558381"
             },
-            "created_at": "2023-10-06 16:56"
+            "type": "NEWS",
+            "created_at": "2024-09-21 13:06"
         },
+        {
+            "id": "b4413807-b5f6-48a5-abda-15673622f2f2",
+            "title": "Title 2",
+            "desc": "Description 2",
+            "medias": [],
+            "likes": [],
+            "unlikes": [],
+            "comments": [],
+            "app": {
+                "id": "dcba8c60-62f4-416b-953a-f6da0a607862",
+                "name": "saka"
+            },
+            "user": {
+                "fullname": "",
+                "email": "reihanagam7@gmail.com",
+                "phone": "089670558381"
+            },
+            "type": "EVENT",
+            "created_at": "2024-09-21 16:23"
+        }
     ]
 }
 ```
 
-## CREATE NEWS
+## CREATE CONTENT
 
 Request : 
 - Method : POST
-- Endpoint : `/api/v1/news`
+- Endpoint : `/api/v1/content`
 - Body :
 
 ```json
 {
-    "id": "409630ea-8daa-40c8-9196-a2a3aa473fdf",
-    "title": "Test",
-    "desc": "lorem metus viverra tortor, eu tempus orci leo imperdiet purus. Nam nec consectetur mi, nec vestibulum nulla. Donec vel dui lectus.",
-}
-```
-
-## ASSIGN NEWS IMG
-
-Request : 
-- Method : POST
-- Endpoint : `/api/v1/news-upload-image`
-- Body :
-
-```json
-{
-    "id": "409630ea-8daa-40c8-9196-a2a3aa473fdf",
-    "title": "Test",
-    "desc": "lorem metus viverra tortor, eu tempus orci leo imperdiet purus. Nam nec consectetur mi, nec vestibulum nulla. Donec vel dui lectus.",
+    "id": "b4413807-b5f6-48a5-abda-15673622f2f2",
+    "title": "Title 2",
+    "desc": "Description 2",
+    "type_id": 2
 }
 ```
