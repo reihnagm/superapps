@@ -1,19 +1,20 @@
 package controllers
 
 import (
-	"net/http"
 	"encoding/json"
-	"github.com/dgrijalva/jwt-go"
+	"net/http"
+	helper "superapps/helpers"
 	models "superapps/models"
 	service "superapps/services"
-	helper "superapps/helpers"
+
+	"github.com/dgrijalva/jwt-go"
 )
 
 func All(w http.ResponseWriter, r *http.Request) {
 
-	page	:= r.URL.Query().Get("page")
-	limit 	:= r.URL.Query().Get("limit")
-	search  := r.URL.Query().Get("search")
+	page := r.URL.Query().Get("page")
+	limit := r.URL.Query().Get("limit")
+	search := r.URL.Query().Get("search")
 	appName := r.URL.Query().Get("app_name")
 
 	result, err := service.GetContent(search, page, limit, appName)
@@ -24,26 +25,26 @@ func All(w http.ResponseWriter, r *http.Request) {
 	}
 
 	helper.Logger("info", "Get all content success")
-	helper.ResponseWithPagination(w, http.StatusOK, false, "Successfully", 
-		result["total"], 
-		result["per_page"], 
-		result["prev_page"], 
-		result["next_page"], 
-		result["current_page"], 
+	helper.ResponseWithPagination(w, http.StatusOK, false, "Successfully",
+		result["total"],
+		result["per_page"],
+		result["prev_page"],
+		result["next_page"],
+		result["current_page"],
 		result["next_url"],
 		result["prev_url"],
 		result["data"],
 	)
 }
 
-func CreateMediaContent(w http.ResponseWriter ,r*http.Request) {
+func CreateMediaContent(w http.ResponseWriter, r *http.Request) {
 
 	data := &models.ContentMedia{}
 
 	errCreateMedia := json.NewDecoder(r.Body).Decode(data)
 
 	if errCreateMedia != nil {
-		helper.Logger("error", "In Server: " + errCreateMedia.Error())
+		helper.Logger("error", "In Server: "+errCreateMedia.Error())
 		return
 	}
 
@@ -65,7 +66,7 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 	errCreateContent := json.NewDecoder(r.Body).Decode(data)
 
 	if errCreateContent != nil {
-		helper.Logger("error", "In Server: " + errCreateContent.Error())
+		helper.Logger("error", "In Server: "+errCreateContent.Error())
 		return
 	}
 
@@ -74,13 +75,15 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 	token := helper.DecodeJwt(tokenHeader)
 
 	claims, _ := token.Claims.(jwt.MapClaims)
-		
+
 	userId, _ := claims["id"].(string)
 
 	appName := r.Header.Get("APP_NAME")
-	id	  	:= data.Uid
-	title 	:= data.Title
-	desc  	:= data.Description
+	id := data.Uid
+	title := data.Title
+	desc := data.Description
+
+	TypeId := data.TypeId
 
 	data.AppName = appName
 	data.UserId = userId
@@ -97,17 +100,23 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if  title == "" {
+	if title == "" {
 		helper.Logger("error", "In Server: title field is required")
 		helper.Response(w, 400, true, "title field is required", map[string]interface{}{})
 		return
-	} 
+	}
 
-	if  desc == "" {
-		helper.Logger("error", "In Server: description field is required")
-		helper.Response(w, 400, true, "description field is required", map[string]interface{}{})
+	if desc == "" {
+		helper.Logger("error", "In Server: desc field is required")
+		helper.Response(w, 400, true, "desc field is required", map[string]interface{}{})
 		return
-	} 
+	}
+
+	if TypeId == 0 {
+		helper.Logger("error", "In Server: type_id field is required")
+		helper.Response(w, 400, true, "type_id field is required", map[string]interface{}{})
+		return
+	}
 
 	result, err := service.CreateContent(data)
 
@@ -116,7 +125,7 @@ func CreateContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	helper.Logger("info", "Create media success")
+	helper.Logger("info", "Create content success")
 	helper.Response(w, http.StatusOK, false, "Successfully", result)
 }
 
@@ -127,7 +136,7 @@ func CreateContentLike(w http.ResponseWriter, r *http.Request) {
 	errCreateContentLike := json.NewDecoder(r.Body).Decode(data)
 
 	if errCreateContentLike != nil {
-		helper.Logger("error", "In Server: " + errCreateContentLike.Error())
+		helper.Logger("error", "In Server: "+errCreateContentLike.Error())
 		return
 	}
 
@@ -136,13 +145,13 @@ func CreateContentLike(w http.ResponseWriter, r *http.Request) {
 	token := helper.DecodeJwt(tokenHeader)
 
 	claims, _ := token.Claims.(jwt.MapClaims)
-		
+
 	userId, _ := claims["id"].(string)
 
 	contentId := data.ContentId
 
-	data.ContentId = contentId 
-	data.UserId = userId 
+	data.ContentId = contentId
+	data.UserId = userId
 
 	if contentId == "" {
 		helper.Logger("error", "In Server: content_id is required")
@@ -168,7 +177,7 @@ func CreateContentUnlike(w http.ResponseWriter, r *http.Request) {
 	errCreateContentUnlike := json.NewDecoder(r.Body).Decode(data)
 
 	if errCreateContentUnlike != nil {
-		helper.Logger("error", "In Server: " + errCreateContentUnlike.Error())
+		helper.Logger("error", "In Server: "+errCreateContentUnlike.Error())
 		return
 	}
 
@@ -177,13 +186,13 @@ func CreateContentUnlike(w http.ResponseWriter, r *http.Request) {
 	token := helper.DecodeJwt(tokenHeader)
 
 	claims, _ := token.Claims.(jwt.MapClaims)
-		
+
 	userId, _ := claims["id"].(string)
 
 	contentId := data.ContentId
 
-	data.ContentId = contentId 
-	data.UserId = userId 
+	data.ContentId = contentId
+	data.UserId = userId
 
 	if contentId == "" {
 		helper.Logger("error", "In Server: content_id is required")
@@ -203,13 +212,13 @@ func CreateContentUnlike(w http.ResponseWriter, r *http.Request) {
 }
 
 func CreateContentComment(w http.ResponseWriter, r *http.Request) {
-	
+
 	data := &models.ReqContentComment{}
 
 	errCreateContentComment := json.NewDecoder(r.Body).Decode(data)
 
 	if errCreateContentComment != nil {
-		helper.Logger("error", "In Server: " + errCreateContentComment.Error())
+		helper.Logger("error", "In Server: "+errCreateContentComment.Error())
 		return
 	}
 
@@ -218,13 +227,13 @@ func CreateContentComment(w http.ResponseWriter, r *http.Request) {
 	token := helper.DecodeJwt(tokenHeader)
 
 	claims, _ := token.Claims.(jwt.MapClaims)
-		
+
 	userId, _ := claims["id"].(string)
 
-	contentId	:= data.ContentId
-	comment 	:= data.Comment
+	contentId := data.ContentId
+	comment := data.Comment
 
-	data.ContentId = contentId 
+	data.ContentId = contentId
 	data.Comment = comment
 	data.UserId = userId
 
@@ -234,11 +243,11 @@ func CreateContentComment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if  comment == "" {
+	if comment == "" {
 		helper.Logger("error", "In Server: comment field is required")
 		helper.Response(w, 400, true, "comment field is required", map[string]interface{}{})
 		return
-	} 
+	}
 
 	_, err := service.CreateContentComment(data)
 
@@ -257,7 +266,7 @@ func DeleteContentComment(w http.ResponseWriter, r *http.Request) {
 	errDelContentComment := json.NewDecoder(r.Body).Decode(data)
 
 	if errDelContentComment != nil {
-		helper.Logger("error", "In Server: " + errDelContentComment.Error())
+		helper.Logger("error", "In Server: "+errDelContentComment.Error())
 		return
 	}
 
@@ -265,11 +274,11 @@ func DeleteContentComment(w http.ResponseWriter, r *http.Request) {
 
 	data.Uid = Uid
 
-	if  Uid == "" {
+	if Uid == "" {
 		helper.Logger("error", "In Server: id field is required")
 		helper.Response(w, 400, true, "id field is required", map[string]interface{}{})
 		return
-	} 
+	}
 
 	_, err := service.DelContentComment(data)
 

@@ -1,22 +1,23 @@
 package helper
 
-// import (	
+// import (
 // 	"net/mail"
 // )
 
 import (
 	// "math/rand"
 	crand "crypto/rand"
-    "regexp"
-	"strings"
-	"os"
 	"encoding/base32"
-    // "time"
+	"os"
+	"regexp"
+	"strings"
+
+	// "time"
 	"github.com/dgrijalva/jwt-go"
-    "golang.org/x/crypto/bcrypt"
+	"golang.org/x/crypto/bcrypt"
 )
 
-var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+// var letterRunes = []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
 func Contains(s []string, e string) bool {
 	for _, a := range s {
@@ -42,7 +43,7 @@ func DecodeJwt(tokenP string) *jwt.Token {
 // func CodeOtp() string {
 
 // 	rand.Seed(time.Now().UTC().UnixNano())
-	
+
 // 	b := make([]rune, 4)
 // 	l := len(letterRunes)
 // 	for i := range b {
@@ -72,14 +73,13 @@ func CodeOtpSecure() string {
 	return string(otp)
 }
 
-
 func IsValidEmail(email string) bool {
-    // Optional 1
-    // _, err := mail.ParseAddress(email)
-    // return err == nil
+	// Optional 1
+	// _, err := mail.ParseAddress(email)
+	// return err == nil
 
-    emailRegex := regexp.MustCompile(`^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`)
-    return emailRegex.MatchString(email)
+	emailRegex := regexp.MustCompile(`^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$`)
+	return emailRegex.MatchString(email)
 }
 
 func Hash(password string) ([]byte, error) {

@@ -6,11 +6,11 @@ import (
 
 type User struct {
 	Id       string `json:"id"`
-	Val  	 string `json:"val"`
+	Val      string `json:"val"`
 	Email    string `json:"email"`
-	Phone	 string `json:"phone"`
+	Phone    string `json:"phone"`
 	AppName  string `json:"app_name"`
-	Otp	     string `json:"otp"`
+	Otp      string `json:"otp"`
 	Password string `json:"password"`
 }
 
@@ -19,13 +19,13 @@ type CheckAccount struct {
 }
 
 type UserLogin struct {
-	Uid			string `json:"uid"`
-	EmailActive int `json:"email_active"`
-	Password 	string `json:"password"`
+	Uid         string `json:"uid"`
+	EmailActive int    `json:"email_active"`
+	Password    string `json:"password"`
 }
 
 type UserOtp struct {
-	Uid 		string 	  `json:"uid"`
-	EmailActive int	   	  `json:"email_active"`
-	OtpDate 	time.Time `json:"otp_date"`
+	Uid         string    `json:"uid"`
+	EmailActive int       `json:"email_active"`
+	OtpDate     time.Time `json:"otp_date"`
 }

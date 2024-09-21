@@ -2,25 +2,24 @@ package services
 
 import (
 	"errors"
-	"time"
-	"golang.org/x/crypto/bcrypt"
+	"fmt"
 	entities "superapps/entities"
-	models "superapps/models"
 	helper "superapps/helpers"
 	middleware "superapps/middlewares"
+	models "superapps/models"
+	"time"
+
 	uuid "github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
-	user := entities.User{}
-
-	user.Email = u.Email
-	user.Otp = u.Otp
-
 	users := []entities.UserOtp{}
 	query := `SELECT uid, email_active, otp_date FROM users 
-	WHERE (email = '`+u.Email+`' OR phone = '`+u.Email+`') AND otp = '`+u.Otp+`'`
+	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `') AND otp = '` + u.Otp + `'`
+
+	fmt.Println((query))
 
 	err := db.Debug().Raw(query).Scan(&users).Error
 
@@ -32,8 +31,8 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("User not found")
-	} 
+		return nil, errors.New("user not found")
+	}
 
 	uid := users[0].Uid
 	emailActive := users[0].EmailActive
@@ -41,19 +40,19 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 	if emailActive == 1 {
 		helper.Logger("error", "In Server: Account is already active")
-		return nil, errors.New("Account is already active")
+		return nil, errors.New("account is already active")
 	}
 
 	currentTime := time.Now()
-    elapsed := currentTime.Sub(otpDate)
+	elapsed := currentTime.Sub(otpDate)
 
 	if elapsed >= 1*time.Minute {
 		helper.Logger("error", "In Server: Otp is expired")
-		return nil, errors.New("Otp is expired")
-    } 
+		return nil, errors.New("otp is expired")
+	}
 
 	errUpdateEmailActive := db.Debug().Exec(`UPDATE users SET email_active = 1, email_active_date = NOW()
-		WHERE email = '`+u.Email+`'
+		WHERE email = '` + u.Val + `'
 	`).Error
 
 	if errUpdateEmailActive != nil {
@@ -74,58 +73,9 @@ func VerifyOtp(u *models.User) (map[string]interface{}, error) {
 
 func ResendOtp(u *models.User) (map[string]interface{}, error) {
 
-	// users := []entities.UserOtp{}
-	// query := `SELECT email_active, otp_date FROM users 
-	// WHERE (email = '`+u.Email+`' OR phone = '`+u.Email+`')`
-
-	// err := db.Debug().Raw(query).Scan(&users).Error
-
-	// if err != nil {
-	// 	helper.Logger("error", "In Server: "+err.Error())
-	// 	return nil, errors.New(err.Error())
-	// }
-
-	// isUserExist := len(users)
-
-	// if isUserExist == 0 {
-	// 	return nil, errors.New("User not found")
-	// } 
-
-	// emailActive := users[0].EmailActive
-	// otpDate := users[0].OtpDate
-
-	// if emailActive == 1 {
-	// 	helper.Logger("error", "In Server: Account is already active")
-	// 	return nil, errors.New("Account is already active")
-	// }
-
-	// currentTime := time.Now()
-    // elapsed := currentTime.Sub(otpDate)
-
-	otp := helper.CodeOtpSecure()
-
-	// if elapsed >= 1*time.Minute {
-	// 	errUpdateResendOtp:= db.Debug().Exec(`UPDATE users SET otp = '`+otp+`', otp_date = NOW() WHERE email = '`+u.Email+`'`).Error
-
-	// 	if errUpdateResendOtp != nil {
-	// 		helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
-	// 		return nil, errors.New(errUpdateResendOtp.Error())
-	// 	}
-    // } 
-
-	return map[string]interface{}{
-		"otp": otp,
-	}, nil
-}
-
-func Login(u *models.User) (map[string]interface{}, error) {
-
-	user := entities.User{}
-
-	user.Password = u.Password
-
-	users := []entities.UserLogin{}
-	query := `SELECT uid, email_active, password FROM users WHERE email = '`+u.Val+`' OR phone = '`+u.Val+`'`
+	users := []entities.UserOtp{}
+	query := `SELECT email_active, otp_date FROM users
+	WHERE (email = '` + u.Val + `' OR phone = '` + u.Val + `')`
 
 	err := db.Debug().Raw(query).Scan(&users).Error
 
@@ -137,23 +87,70 @@ func Login(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 0 {
-		return nil, errors.New("User not found")
-	} 
-	
+		return nil, errors.New("user not found")
+	}
+
+	emailActive := users[0].EmailActive
+	otpDate := users[0].OtpDate
+
+	if emailActive == 1 {
+		helper.Logger("error", "In Server: Account is already active")
+		return nil, errors.New("account is already active")
+	}
+
+	currentTime := time.Now()
+	elapsed := currentTime.Sub(otpDate)
+
+	otp := helper.CodeOtpSecure()
+
+	if elapsed >= 1*time.Minute {
+		errUpdateResendOtp := db.Debug().Exec(`UPDATE users SET otp = '` + otp + `', otp_date = NOW() WHERE email = '` + u.Val + `'`).Error
+
+		if errUpdateResendOtp != nil {
+			helper.Logger("error", "In Server: "+errUpdateResendOtp.Error())
+			return nil, errors.New(errUpdateResendOtp.Error())
+		}
+	}
+
+	return map[string]interface{}{
+		"otp": otp,
+	}, nil
+}
+
+func Login(u *models.User) (map[string]interface{}, error) {
+
+	user := entities.User{}
+
+	users := []entities.UserLogin{}
+	query := `SELECT uid, email_active, password FROM users WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`
+
+	err := db.Debug().Raw(query).Scan(&users).Error
+
+	if err != nil {
+		helper.Logger("error", "In Server: "+err.Error())
+		return nil, errors.New(err.Error())
+	}
+
+	isUserExist := len(users)
+
+	if isUserExist == 0 {
+		return nil, errors.New("user not found")
+	}
+
 	emailActive := users[0].EmailActive
 	user.Id = users[0].Uid
 
-	if emailActive == 0 { 
-		err := db.Debug().Exec(`UPDATE users SET otp = '`+helper.CodeOtpSecure()+`', otp_date = NOW() 
-		WHERE email = '`+u.Val+`' OR phone = '`+u.Val+`'`).Error
-		
+	if emailActive == 0 {
+		err := db.Debug().Exec(`UPDATE users SET otp = '` + helper.CodeOtpSecure() + `', otp_date = NOW() 
+		WHERE email = '` + u.Val + `' OR phone = '` + u.Val + `'`).Error
+
 		if err != nil {
 			helper.Logger("error", "In Server: "+err.Error())
 			return nil, errors.New(err.Error())
 		}
 
 		helper.Logger("error", "In Server: Please activate your account")
-		return nil, errors.New("Please activate your account")
+		return nil, errors.New("please activate your account")
 	}
 
 	passHashed := users[0].Password
@@ -162,7 +159,7 @@ func Login(u *models.User) (map[string]interface{}, error) {
 
 	if err != nil && err == bcrypt.ErrMismatchedHashAndPassword {
 		helper.Logger("error", "In Server: "+err.Error())
-		return nil, errors.New("Credentials is incorrect")
+		return nil, errors.New("credentials is incorrect")
 	}
 
 	token, err := middleware.CreateToken(user.Id)
@@ -188,8 +185,6 @@ func Register(u *models.User) (map[string]interface{}, error) {
 
 	user.Id = uuid.NewV4().String()
 
-	profileUuid := uuid.NewV4().String()
-
 	user.Email = u.Email
 	user.Phone = u.Phone
 	user.Password = string(hashedPassword)
@@ -197,7 +192,7 @@ func Register(u *models.User) (map[string]interface{}, error) {
 	otp := helper.CodeOtpSecure()
 
 	users := []entities.CheckAccount{}
-	errCheckAccount := db.Debug().Raw(`SELECT email FROM users WHERE email = '`+u.Email+`'`).Scan(&users).Error
+	errCheckAccount := db.Debug().Raw(`SELECT email FROM users WHERE email = '` + u.Email + `'`).Scan(&users).Error
 
 	if errCheckAccount != nil {
 		helper.Logger("error", "In Server: "+errCheckAccount.Error())
@@ -207,12 +202,12 @@ func Register(u *models.User) (map[string]interface{}, error) {
 	isUserExist := len(users)
 
 	if isUserExist == 1 {
-		return nil, errors.New("User already exist")
-	} 
-	
+		return nil, errors.New("user already exist")
+	}
+
 	applications := []entities.Application{}
-	errCheckApp := db.Debug().Raw(`SELECT uid, username FROM applications WHERE username = '`+u.AppName+`'`).Scan(&applications).Error
-	
+	errCheckApp := db.Debug().Raw(`SELECT uid, name FROM applications WHERE name = '` + u.AppName + `'`).Scan(&applications).Error
+
 	if errCheckApp != nil {
 		helper.Logger("error", "In Server: "+errCheckApp.Error())
 		return nil, errors.New(errCheckApp.Error())
@@ -221,20 +216,20 @@ func Register(u *models.User) (map[string]interface{}, error) {
 	isAppExist := len(applications)
 
 	if isAppExist == 0 {
-		return nil, errors.New("App not found")
-	} 
+		return nil, errors.New("app not found")
+	}
 
 	ApplicationId := applications[0].Uid
 
 	errInsertUser := db.Debug().Exec(`INSERT INTO users (uid, email, phone, password, otp, app_id) 
-	VALUES ('`+user.Id+`', '`+user.Email+`', '`+user.Phone+`', '`+user.Password+`', '`+otp+`', '`+ApplicationId+`')`).Error
+	VALUES ('` + user.Id + `', '` + user.Email + `', '` + user.Phone + `', '` + user.Password + `', '` + otp + `', '` + ApplicationId + `')`).Error
 
 	if errInsertUser != nil {
 		helper.Logger("error", "In Server: "+errInsertUser.Error())
 		return nil, errors.New(errInsertUser.Error())
 	}
 
-	errUserProfile := db.Debug().Exec(`INSERT INTO user_profiles (uid, user_id) VALUES('`+profileUuid+`', '`+user.Id+`')`).Error
+	errUserProfile := db.Debug().Exec(`INSERT INTO user_profiles (user_id) VALUES('` + user.Id + `')`).Error
 
 	if errUserProfile != nil {
 		helper.Logger("error", "In Server: "+errUserProfile.Error())

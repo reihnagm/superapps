@@ -2,9 +2,9 @@ package helper
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 	"strings"
-	"errors"
 	entities "superapps/entities"
 )
 
@@ -20,7 +20,7 @@ func Response(w http.ResponseWriter, status int, err bool, message string, data 
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
 	jsonEncoder := json.NewEncoder(w)
-	errs := jsonEncoder.Encode(&entities.Response{status, err, message, data})
+	errs := jsonEncoder.Encode(&entities.Response{Status: status, Error: err, Message: message, Data: data})
 	if errs != nil {
 		Logger("error", errs.Error())
 	}
@@ -30,7 +30,7 @@ func ResponseWithPagination(w http.ResponseWriter, status int, err bool, message
 	w.Header().Add("Content-Type", "application/json")
 	w.WriteHeader(status)
 	jsonEncoder := json.NewEncoder(w)
-	errs := jsonEncoder.Encode(&entities.ResponseWithPagination{status, err, message, total, perPage, prevPage, nextPage, currentPage, nextUrl, prevUrl, data})
+	errs := jsonEncoder.Encode(&entities.ResponseWithPagination{Status: status, Error: err, Message: message, Total: total, PerPage: perPage, PrevPage: prevPage, NextPage: nextPage, CurrentPage: currentPage, NextUrl: nextUrl, PrevUrl: prevUrl, Data: data})
 	if errs != nil {
 		Logger("error", errs.Error())
 	}
@@ -40,17 +40,17 @@ func FormatError(err string) error {
 
 	if strings.Contains(err, "email") {
 		Logger("error", "In Server: Email Already Taken")
-		return errors.New("Email Already Taken")
+		return errors.New("email already taken")
 	}
-	
+
 	if strings.Contains(err, "phone") {
 		Logger("error", "In Server: Phone Already Taken")
-		return errors.New("Phone Already Taken")
+		return errors.New("phone already taken")
 	}
 
 	if strings.Contains(err, "hashedPassword") {
 		Logger("error", "In Server: Incorrect Password")
-		return errors.New("Incorrect Password")
+		return errors.New("incorrect password")
 	}
 
 	return errors.New(err)

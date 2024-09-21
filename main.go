@@ -1,13 +1,14 @@
 package main
 
 import (
+	"fmt"
+	"net/http"
+	"os"
+	"superapps/controllers"
 	helper "superapps/helpers"
 	middleware "superapps/middlewares"
-    "superapps/controllers"
-    "net/http"
-    "os"
 	"time"
-    "fmt"
+
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
@@ -28,12 +29,14 @@ func main() {
 
 	for _, fileInfo := range fileInfos {
 		if fileInfo.IsDir() {
-			// Serving static
-			router.PathPrefix("/"+fileInfo.Name()+"/").Handler(http.StripPrefix("/"+fileInfo.Name()+"/", http.FileServer(http.Dir("./public/"+ fileInfo.Name() +"/"))))
+			// Serving static content
+			staticPath := "/" + fileInfo.Name() + "/"
+			publicPath := "./public/" + fileInfo.Name() + "/"
+			router.PathPrefix(staticPath).Handler(http.StripPrefix(staticPath, http.FileServer(http.Dir(publicPath))))
 		}
 	}
-	
-    // Auth
+
+	// Auth
 	router.HandleFunc("/api/v1/login", controllers.Login).Methods("POST")
 	router.HandleFunc("/api/v1/register", controllers.Register).Methods("POST")
 
@@ -48,7 +51,7 @@ func main() {
 
 	// Content Comment
 	router.HandleFunc("/api/v1/content/comment", controllers.CreateContentComment).Methods("POST")
-	router.HandleFunc("/api/v1/content/comment/delete", controllers.DeleteContentComment).Methods("POST")
+	router.HandleFunc("/api/v1/content/comment/delete", controllers.DeleteContentComment).Methods("DELETE")
 
 	// Content Like
 	router.HandleFunc("/api/v1/content/like", controllers.CreateContentLike).Methods("POST")
@@ -59,11 +62,11 @@ func main() {
 	// Membernear
 	router.HandleFunc("/api/v1/membernear/all", controllers.GetMembernear).Methods("GET")
 
-	// Media 
+	// Media
 	router.HandleFunc("/api/v1/media/upload", controllers.Upload).Methods("POST")
 
 	portEnv := os.Getenv("PORT")
-	port	:= ":" + portEnv
+	port := ":" + portEnv
 
 	// NOT SECURE FOR USE
 	// server := new(http.Server)
@@ -73,17 +76,17 @@ func main() {
 	fmt.Println("Starting server at", port)
 
 	server := &http.Server{
-        Addr:              port,
-		Handler:  		   router,
-        ReadHeaderTimeout: 3 * time.Second,
-    }
+		Addr:              port,
+		Handler:           router,
+		ReadHeaderTimeout: 3 * time.Second,
+	}
 
-    errListenAndServe := server.ListenAndServe()
-    if err != nil {
+	errListenAndServe := server.ListenAndServe()
+	if err != nil {
 		fmt.Println("Error starting server:", errListenAndServe)
-    }
+	}
 
-    // errs := http.ListenAndServe(port, router)
+	// errs := http.ListenAndServe(port, router)
 	// if errs != nil {
 	// 	fmt.Println("Error starting server:", errs)
 	// }
