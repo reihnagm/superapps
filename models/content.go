@@ -8,6 +8,7 @@ type AllCountContent entities.AllCountContent
 type ContentApplicationResponse entities.ContentApplicationResponse
 type Content entities.Content
 type ReqContentComment entities.ReqContentComment
+type DelContent entities.DelContent
 type DelContentComment entities.DelContentComment
 type ContentComment entities.ContentComment
 type ContentCommentUser entities.ContentCommentUser

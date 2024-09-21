@@ -214,3 +214,16 @@ Request :
     "type_id": 2
 }
 ```
+
+## DELETE CONTENT
+
+Request : 
+- Method : DELETE
+- Endpoint : `/api/v1/content`
+- Body :
+
+```json
+{
+    "id": "b4413807-b5f6-48a5-abda-15673622f2f2",
+}
+```

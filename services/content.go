@@ -402,6 +402,18 @@ func CreateContentComment(c *models.ReqContentComment) (map[string]interface{}, 
 	return map[string]interface{}{}, nil
 }
 
+func DelContent(d *models.DelContent) (map[string]interface{}, error) {
+
+	errDel := db.Debug().Exec(`DELETE FROM contents WHERE uid = '` + d.Uid + `'`).Error
+
+	if errDel != nil {
+		helper.Logger("error", "In Server: "+errDel.Error())
+		return nil, errors.New(errDel.Error())
+	}
+
+	return map[string]interface{}{}, nil
+}
+
 func DelContentComment(d *models.DelContentComment) (map[string]interface{}, error) {
 
 	errDel := db.Debug().Exec(`DELETE FROM content_comments WHERE uid = '` + d.Uid + `'`).Error

@@ -46,6 +46,7 @@ func main() {
 
 	// Content
 	router.HandleFunc("/api/v1/content", controllers.All).Methods("GET")
+	router.HandleFunc("/api/v1/content/delete", controllers.DeleteContent).Methods("DELETE")
 	router.HandleFunc("/api/v1/content-upload", controllers.CreateMediaContent).Methods("POST")
 	router.HandleFunc("/api/v1/content", controllers.CreateContent).Methods("POST")
 

@@ -100,6 +100,10 @@ type ReqContentComment struct {
 	Comment   string `json:"comment"`
 }
 
+type DelContent struct {
+	Uid string `json:"id"`
+}
+
 type DelContentComment struct {
 	Uid string `json:"id"`
 }

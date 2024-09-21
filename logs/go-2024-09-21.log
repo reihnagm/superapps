@@ -134,3 +134,14 @@
 [INFO]: 2024-09-21 17:10:57 - Get all content success
 [INFO]: 2024-09-21 17:11:04 - Create content comment success
 [INFO]: 2024-09-21 17:11:07 - Get all content success
+[INFO]: 2024-09-21 18:00:21 - Get all content success
+[ERROR]: 2024-09-21 18:00:35 - In Server: Missing auth token
+[ERROR]: 2024-09-21 18:00:39 - In Server: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 7
+[INFO]: 2024-09-21 18:00:55 - Delete content success
+[INFO]: 2024-09-21 18:00:59 - Get all content success
+[INFO]: 2024-09-21 18:01:13 - Delete content success
+[INFO]: 2024-09-21 18:01:15 - Get all content success
+[ERROR]: 2024-09-21 18:01:46 - In Server: Error 1146: Table 'superapps.content' doesn't exist
+[ERROR]: 2024-09-21 18:01:56 - In Server: Error 1146: Table 'superapps.content' doesn't exist
+[INFO]: 2024-09-21 18:01:59 - Delete content success
+[INFO]: 2024-09-21 18:02:01 - Get all content success

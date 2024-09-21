@@ -260,6 +260,37 @@ func CreateContentComment(w http.ResponseWriter, r *http.Request) {
 	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
 }
 
+func DeleteContent(w http.ResponseWriter, r *http.Request) {
+	data := &models.DelContent{}
+
+	errDelContent := json.NewDecoder(r.Body).Decode(data)
+
+	if errDelContent != nil {
+		helper.Logger("error", "In Server: "+errDelContent.Error())
+		return
+	}
+
+	Uid := data.Uid
+
+	data.Uid = Uid
+
+	if Uid == "" {
+		helper.Logger("error", "In Server: id field is required")
+		helper.Response(w, 400, true, "id field is required", map[string]interface{}{})
+		return
+	}
+
+	_, err := service.DelContent(data)
+
+	if err != nil {
+		helper.Response(w, 400, true, err.Error(), map[string]interface{}{})
+		return
+	}
+
+	helper.Logger("info", "Delete content success")
+	helper.Response(w, http.StatusOK, false, "Successfully", map[string]interface{}{})
+}
+
 func DeleteContentComment(w http.ResponseWriter, r *http.Request) {
 	data := &models.DelContentComment{}
 
