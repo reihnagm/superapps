@@ -215,6 +215,17 @@ Request :
 }
 ```
 
+Response : 
+
+```json 
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {}
+}
+```
+
 ## LIKE CONTENT
 
 Request : 
@@ -228,6 +239,17 @@ Request :
 }
 ```
 
+Response : 
+
+```json 
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {}
+}
+```
+
 ## UNLIKE CONTENT
 
 Request : 
@@ -238,6 +260,17 @@ Request :
 ```json
 {
     "content_id": "b4413807-b5f6-48a5-abda-15673622f2f1"
+}
+```
+
+Response : 
+
+```json 
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {}
 }
 ```
 
@@ -255,6 +288,17 @@ Request :
 }
 ```
 
+Response : 
+
+```json 
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {}
+}
+```
+
 ## DELETE CONTENT
 
 Request : 
@@ -268,6 +312,17 @@ Request :
 }
 ```
 
+Response : 
+
+```json 
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {}
+}
+```
+
 ## DELETE COMMENT CONTENT
 
 Request : 
@@ -278,6 +333,17 @@ Request :
 ```json
 {
     "id": "b4413807-b5f6-48a5-abda-15673622f2f2",
+}
+```
+
+Response : 
+
+```json 
+{
+    "status": 200,
+    "error": false,
+    "message": "Successfully",
+    "data": {}
 }
 ```
 
